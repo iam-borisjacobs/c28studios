@@ -1,0 +1,1924 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>C28 — Software & Cloud Engineering | Deploy, Secure & Operate Reliably</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        mono: ['"JetBrains Mono"', 'monospace'],
+                    },
+                    colors: {
+                        obsidian: {
+                            950: '#040705',
+                            900: '#070c09',
+                            800: '#0b140e',
+                            700: '#101f16',
+                        },
+                        neon: {
+                            400: '#4ade80',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #050806;
+            color: #f1f5f9;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* Subtle Carbon Grid Overlay */
+        .bg-carbon-grid {
+            background-size: 48px 48px;
+            background-image: 
+                linear-gradient(to right, rgba(34, 197, 94, 0.04) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(34, 197, 94, 0.04) 1px, transparent 1px);
+        }
+
+        /* SynthChat Inspired Vertical Light Beam & Aurora */
+        .hero-beam {
+            background: radial-gradient(ellipse 50% 80% at 72% 20%, rgba(34, 197, 94, 0.25) 0%, rgba(22, 163, 74, 0.08) 45%, transparent 75%);
+        }
+        .vertical-light-pillar {
+            background: linear-gradient(180deg, rgba(74, 222, 128, 0.45) 0%, rgba(34, 197, 94, 0.18) 55%, rgba(5, 8, 6, 0) 100%);
+            filter: blur(28px);
+        }
+        .vertical-light-core {
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.7) 0%, rgba(74, 222, 128, 0.5) 45%, transparent 100%);
+            filter: blur(4px);
+        }
+
+        /* Glassmorphic Emerald Cards */
+        .glass-card {
+            background: linear-gradient(180deg, rgba(13, 24, 17, 0.78) 0%, rgba(7, 13, 9, 0.92) 100%);
+            border: 1px solid rgba(34, 197, 94, 0.18);
+            box-shadow: 0 20px 50px -15px rgba(0, 0, 0, 0.7), inset 0 1px 0 0 rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(16px);
+        }
+        .glass-card:hover {
+            border-color: rgba(74, 222, 128, 0.36);
+        }
+
+        .glass-card-highlight {
+            background: radial-gradient(120% 100% at 0% 0%, rgba(34, 197, 94, 0.26) 0%, rgba(11, 22, 15, 0.94) 60%, rgba(7, 12, 9, 0.98) 100%);
+            border: 1px solid rgba(74, 222, 128, 0.4);
+            box-shadow: 0 0 45px -10px rgba(34, 197, 94, 0.25), inset 0 1px 0 0 rgba(74, 222, 128, 0.25);
+        }
+
+        /* Glowing Green Pill Button */
+        .btn-emerald {
+            background: linear-gradient(180deg, #22c55e 0%, #15803d 100%);
+            box-shadow: 0 0 24px rgba(34, 197, 94, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .btn-emerald:hover {
+            background: linear-gradient(180deg, #4ade80 0%, #16a34a 100%);
+            box-shadow: 0 0 32px rgba(74, 222, 128, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+            transform: translateY(-1px);
+        }
+
+        /* Section Badge Pill */
+        .section-badge {
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            box-shadow: 0 0 15px rgba(34, 197, 94, 0.15);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #050806;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #142e1f;
+            border-radius: 4px;
+            border: 1px solid rgba(34, 197, 94, 0.2);
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #22c55e;
+        }
+
+        /* Pulse Glow Animation */
+        @keyframes pulseGlow {
+            0%, 100% { opacity: 0.5; transform: scale(1); }
+            50% { opacity: 0.9; transform: scale(1.04); }
+        }
+        .animate-glow {
+            animation: pulseGlow 5s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body class="bg-carbon-grid selection:bg-neon-500 selection:text-obsidian-950">
+
+    <!-- Top Notification / Status Bar -->
+    <div class="bg-obsidian-900/90 border-b border-emerald-500/15 py-2 px-4 text-center text-xs text-slate-400">
+        <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-center gap-2">
+            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-mono uppercase tracking-wider bg-emerald-500/15 text-neon-400 border border-emerald-500/30">
+                <span class="w-1.5 h-1.5 rounded-full bg-neon-400 mr-1.5 animate-pulse"></span>
+                C28 Engineering Studio
+            </span>
+            <span>Need a web app built, containerized with Docker, or deployed with automated CI/CD?</span>
+            <button onclick="openModal('Discovery Consultation')" class="text-neon-400 hover:text-neon-300 font-medium underline underline-offset-4 ml-1">
+                Book a 20-min Architecture Call &rarr;
+            </button>
+        </div>
+    </div>
+
+    <!-- 1. STICKY TOP NAVBAR -->
+    <header class="sticky top-0 z-50 bg-obsidian-950/80 backdrop-blur-xl border-b border-emerald-500/15">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <!-- Brand Logo -->
+            <a href="#" class="flex items-center gap-3 group">
+                <div class="w-9 h-9 rounded-lg btn-emerald flex items-center justify-center text-obsidian-950 font-extrabold text-sm tracking-tighter shadow-lg">
+                    C28
+                </div>
+                <div class="flex flex-col">
+                    <div class="flex items-center gap-2">
+                        <span class="text-white font-bold text-lg tracking-tight">C28</span>
+                        <span class="text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded bg-emerald-950/90 text-neon-400 border border-emerald-500/25">
+                            Software &amp; Cloud
+                        </span>
+                    </div>
+                    <span class="text-[11px] text-slate-400 hidden sm:inline">Engineering Studio</span>
+                </div>
+            </a>
+
+            <!-- Center Navigation -->
+            <nav class="hidden md:flex items-center gap-7 text-sm font-medium text-slate-300">
+                <a href="#capabilities" class="hover:text-neon-400 transition-colors">Capabilities</a>
+                <a href="#services" class="hover:text-neon-400 transition-colors">Services</a>
+                <a href="#blueprint" class="hover:text-neon-400 transition-colors">10-Step Blueprint</a>
+                <a href="#engagement" class="hover:text-neon-400 transition-colors">Engagement</a>
+                <a href="#scenarios" class="hover:text-neon-400 transition-colors">Use Cases</a>
+                <a href="#insights" class="hover:text-neon-400 transition-colors">Lab Notes</a>
+                <a href="#faq" class="hover:text-neon-400 transition-colors">FAQ</a>
+            </nav>
+
+            <!-- Right CTA -->
+            <div class="flex items-center gap-3">
+                <button onclick="openModal('Book a Consultation')" class="btn-emerald text-obsidian-950 font-bold text-xs sm:text-sm px-5 py-2.5 rounded-full flex items-center gap-2">
+                    <span>Book a Consultation</span>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- 2. HERO SECTION (Modeled on SynthChat Reference: Left Copy + Vertical Green Light Pillar + Wide Console Below) -->
+    <section class="relative pt-14 pb-24 lg:pt-20 lg:pb-28 overflow-hidden hero-beam">
+        <!-- Decorative Vertical Green Light Beam on the Right -->
+        <div class="pointer-events-none absolute top-0 right-[12%] lg:right-[18%] w-36 h-[520px] vertical-light-pillar opacity-80 hidden sm:block"></div>
+        <div class="pointer-events-none absolute top-0 right-[16.5%] lg:right-[21.5%] w-1.5 h-[420px] vertical-light-core opacity-75 hidden sm:block"></div>
+        <div class="pointer-events-none absolute top-[340px] right-[6%] lg:right-[10%] w-96 h-32 bg-neon-500/20 blur-3xl rounded-full"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <!-- Hero Top Copy (Left-Aligned like Reference) -->
+            <div class="max-w-3xl">
+                <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full section-badge mb-6">
+                    <span class="w-2 h-2 rounded-full bg-neon-400 animate-ping"></span>
+                    <span class="text-xs font-mono uppercase tracking-widest text-neon-400 font-semibold">
+                        C28 — SOFTWARE &amp; CLOUD ENGINEERING
+                    </span>
+                </div>
+
+                <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight leading-[1.1] mb-6">
+                    We Build Digital Products &amp; Help Teams <span class="text-transparent bg-clip-text bg-gradient-to-r from-neon-400 via-emerald-300 to-white">Deploy, Secure, and Operate</span> Them Reliably.
+                </h1>
+
+                <p class="text-base sm:text-lg text-slate-300/90 leading-relaxed mb-8 max-w-2xl">
+                    Instead of hiring separate people for application code, server configuration, CI/CD automation, and security, partner with one connected engineering studio built for startup founders, small SaaS teams, and growing businesses.
+                </p>
+
+                <!-- Input + Glowing Pill CTA Bar (Matching Reference Hero Input Bar) -->
+                <form onsubmit="handleHeroSubmit(event)" class="max-w-xl glass-card p-2 rounded-full flex flex-col sm:flex-row items-stretch sm:items-center gap-2 border border-emerald-500/30 mb-6">
+                    <div class="flex items-center pl-4 flex-grow">
+                        <svg class="w-4 h-4 text-neon-400 mr-2.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
+                        </svg>
+                        <input id="heroRepoInput" type="text" placeholder="Enter your work email or GitHub repo URL..." class="w-full bg-transparent text-sm text-white placeholder-slate-400 focus:outline-none py-2">
+                    </div>
+                    <button type="submit" class="btn-emerald text-obsidian-950 font-bold text-sm px-6 py-3 rounded-full whitespace-nowrap flex items-center justify-center gap-1.5">
+                        <span>Request a Quote</span>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+                    </button>
+                </form>
+
+                <!-- Quick Outcome Highlights -->
+                <div class="flex flex-wrap items-center gap-x-6 gap-y-2 text-xs text-slate-400">
+                    <span class="flex items-center gap-1.5">
+                        <svg class="w-4 h-4 text-neon-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                        Automated GitHub &rarr; Production CI/CD
+                    </span>
+                    <span class="flex items-center gap-1.5">
+                        <svg class="w-4 h-4 text-neon-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                        Docker, Linux &amp; Nginx HTTPS Hardening
+                    </span>
+                    <span class="flex items-center gap-1.5">
+                        <svg class="w-4 h-4 text-neon-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                        Full-Stack Web &amp; SaaS Development
+                    </span>
+                </div>
+            </div>
+
+            <!-- Hero Interactive Dashboard Preview Card (Matching the dark glowing app frame in the reference) -->
+            <div class="mt-12 relative">
+                <!-- Ambient Emerald Halo behind Dashboard -->
+                <div class=" -inset-1 bg-gradient-to-r from-neon-500/30 via-emerald-500/10 to-neon-400/30 rounded-3xl blur-2xl opacity-70 pointer-events-none"></div>
+
+                <div class="glass-card rounded-2xl border border-emerald-500/30 overflow-hidden shadow-2xl">
+                    <!-- Window Top Bar -->
+                    <div class="bg-obsidian-950/90 border-b border-emerald-500/15 px-4 sm:px-6 py-3.5 flex flex-wrap items-center justify-between gap-3">
+                        <div class="flex items-center gap-3">
+                            <div class="flex items-center gap-1.5">
+                                <span class="w-2.5 h-2.5 rounded-full bg-rose-500/80"></span>
+                                <span class="w-2.5 h-2.5 rounded-full bg-amber-400/80"></span>
+                                <span class="w-2.5 h-2.5 rounded-full bg-neon-400"></span>
+                            </div>
+                            <span class="text-xs font-mono text-slate-300 flex items-center gap-2">
+                                <span class="text-neon-400 font-semibold">c28-control-plane</span>
+                                <span class="text-slate-600">/</span>
+                                <span>production-delivery-pipeline.yml</span>
+                            </span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <span id="consoleStatusBadge" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-mono bg-emerald-500/15 text-neon-400 border border-emerald-500/30">
+                                <span class="w-1.5 h-1.5 rounded-full bg-neon-400 animate-ping"></span>
+                                PRODUCTION HEALTHY • 99.98% UPTIME
+                            </span>
+                            <button onclick="triggerConsoleDeploy()" class="text-xs font-mono bg-emerald-500/20 hover:bg-emerald-500/30 text-neon-400 border border-emerald-500/40 px-3 py-1 rounded-md transition">
+                                &#9654; Simulate Push
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Console Main Body (Sidebar + Interactive View) -->
+                    <div class="grid grid-cols-1 lg:grid-cols-12 min-h-[380px]">
+                        <!-- Left Sidebar Navigation -->
+                        <div class="lg:col-span-3 bg-obsidian-950/60 border-b lg:border-b-0 lg:border-r border-emerald-500/15 p-4 flex flex-col justify-between">
+                            <div>
+                                <div class="text-[11px] font-mono uppercase tracking-wider text-slate-400 mb-3 px-2">
+                                    Engineering Modules
+                                </div>
+                                <div class="space-y-1.5" id="consoleTabs">
+                                    <button onclick="switchConsoleTab('pipeline')" data-tab="pipeline" class="console-tab-btn w-full text-left px-3 py-2.5 rounded-lg text-xs font-medium flex items-center justify-between bg-emerald-500/15 text-neon-400 border border-emerald-500/30">
+                                        <span class="flex items-center gap-2">
+                                            <span class="w-2 h-2 rounded-full bg-neon-400"></span>
+                                            1. CI/CD &amp; Docker Deploy
+                                        </span>
+                                        <span class="font-mono text-[10px] opacity-80">LIVE</span>
+                                    </button>
+                                    <button onclick="switchConsoleTab('devsecops')" data-tab="devsecops" class="console-tab-btn w-full text-left px-3 py-2.5 rounded-lg text-xs font-medium flex items-center justify-between text-slate-400 hover:text-white hover:bg-white/5 border border-transparent">
+                                        <span class="flex items-center gap-2">
+                                            <span class="w-2 h-2 rounded-full bg-emerald-500/40"></span>
+                                            2. DevSecOps Gate
+                                        </span>
+                                        <span class="font-mono text-[10px] opacity-70">PASSED</span>
+                                    </button>
+                                    <button onclick="switchConsoleTab('nginx')" data-tab="nginx" class="console-tab-btn w-full text-left px-3 py-2.5 rounded-lg text-xs font-medium flex items-center justify-between text-slate-400 hover:text-white hover:bg-white/5 border border-transparent">
+                                        <span class="flex items-center gap-2">
+                                            <span class="w-2 h-2 rounded-full bg-emerald-500/40"></span>
+                                            3. Linux, Nginx &amp; HTTPS
+                                        </span>
+                                        <span class="font-mono text-[10px] opacity-70">TLS 1.3</span>
+                                    </button>
+                                    <button onclick="switchConsoleTab('software')" data-tab="software" class="console-tab-btn w-full text-left px-3 py-2.5 rounded-lg text-xs font-medium flex items-center justify-between text-slate-400 hover:text-white hover:bg-white/5 border border-transparent">
+                                        <span class="flex items-center gap-2">
+                                            <span class="w-2 h-2 rounded-full bg-emerald-500/40"></span>
+                                            4. SaaS &amp; Web Architecture
+                                        </span>
+                                        <span class="font-mono text-[10px] opacity-70">APP</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Founder Outcome Box inside Console -->
+                            <div class="mt-6 p-3 rounded-xl bg-emerald-950/40 border border-emerald-500/20">
+                                <div class="text-[11px] font-semibold text-neon-400 mb-1">Why Founders Choose C28</div>
+                                <p class="text-[11px] text-slate-300 leading-relaxed">
+                                    We don't just hand you raw code or a list of AWS buzzwords—we deliver a live, monitored, and secure application in production.
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Right Console Content Area -->
+                        <div class="lg:col-span-9 p-5 sm:p-6 flex flex-col justify-between bg-obsidian-900/50">
+                            <!-- Live Pipeline Progress Strip -->
+                            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
+                                <div class="p-3 rounded-xl bg-obsidian-950/80 border border-emerald-500/20">
+                                    <div class="flex items-center justify-between text-[11px] text-slate-400 font-mono mb-1">
+                                        <span>STEP 01</span>
+                                        <span class="text-neon-400">&#10003; 1.2s</span>
+                                    </div>
+                                    <div class="text-xs font-bold text-white">GitHub Push Hook</div>
+                                    <div class="text-[11px] text-slate-400 mt-0.5">main &rarr; GitHub Actions</div>
+                                </div>
+                                <div class="p-3 rounded-xl bg-obsidian-950/80 border border-emerald-500/20">
+                                    <div class="flex items-center justify-between text-[11px] text-slate-400 font-mono mb-1">
+                                        <span>STEP 02</span>
+                                        <span class="text-neon-400">&#10003; 18.4s</span>
+                                    </div>
+                                    <div class="text-xs font-bold text-white">Docker Build &amp; Scan</div>
+                                    <div class="text-[11px] text-slate-400 mt-0.5">0 Critical CVEs / Secrets OK</div>
+                                </div>
+                                <div class="p-3 rounded-xl bg-obsidian-950/80 border border-emerald-500/20">
+                                    <div class="flex items-center justify-between text-[11px] text-slate-400 font-mono mb-1">
+                                        <span>STEP 03</span>
+                                        <span class="text-neon-400">&#10003; 4.1s</span>
+                                    </div>
+                                    <div class="text-xs font-bold text-white">Nginx Reverse Proxy</div>
+                                    <div class="text-[11px] text-slate-400 mt-0.5">Zero-downtime swap + SSL</div>
+                                </div>
+                                <div class="p-3 rounded-xl bg-obsidian-950/80 border border-emerald-500/20">
+                                    <div class="flex items-center justify-between text-[11px] text-slate-400 font-mono mb-1">
+                                        <span>STEP 04</span>
+                                        <span class="text-neon-400">LIVE</span>
+                                    </div>
+                                    <div class="text-xs font-bold text-white">Health &amp; Cost Monitor</div>
+                                    <div class="text-[11px] text-slate-400 mt-0.5">Disk 28% • Latency 42ms</div>
+                                </div>
+                            </div>
+
+                            <!-- Dynamic Tab Inspection Cards (2-Column Split inside Console like Reference) -->
+                            <div id="consoleDynamicArea" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <!-- Populated dynamically by JS, default shown here -->
+                                <div class="p-4 rounded-xl bg-obsidian-950/90 border border-emerald-500/20 font-mono text-xs">
+                                    <div class="flex items-center justify-between text-slate-400 pb-2 mb-2 border-b border-emerald-500/10">
+                                        <span>TERMINAL // DEPLOYMENT STREAM</span>
+                                        <span class="text-neon-400">ssh deploy@prod-node-01</span>
+                                    </div>
+                                    <div id="consoleTerminalLogs" class="space-y-1.5 text-[11px] text-slate-300 leading-relaxed">
+                                        <div><span class="text-neon-400">[12:04:01]</span> Triggered workflow: <span class="text-white">Deploy SaaS Production</span></div>
+                                        <div><span class="text-neon-400">[12:04:04]</span> Building multi-stage Docker image <span class="text-emerald-300">c28/saas-app:sha-94f2a</span></div>
+                                        <div><span class="text-neon-400">[12:04:12]</span> Running Trivy container &amp; dependency vulnerability check... <span class="text-neon-400">PASSED</span></div>
+                                        <div><span class="text-neon-400">[12:04:16]</span> Injecting encrypted runtime secrets (zero keys in repo)... <span class="text-neon-400">OK</span></div>
+                                        <div><span class="text-neon-400">[12:04:19]</span> Reloading Nginx upstream &amp; verifying HTTPS health check... <span class="text-neon-400">200 OK</span></div>
+                                    </div>
+                                </div>
+
+                                <div class="p-4 rounded-xl bg-obsidian-950/90 border border-emerald-500/20 flex flex-col justify-between">
+                                    <div>
+                                        <div class="flex items-center justify-between mb-2">
+                                            <span class="text-xs font-semibold text-white">Customer-Focused Outcome</span>
+                                            <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/15 text-neon-400">DevOps + DevSecOps</span>
+                                        </div>
+                                        <p id="consoleOutcomeDescription" class="text-xs text-slate-300 leading-relaxed mb-4">
+                                            Instead of manually logging into servers and hoping nothing breaks, your team pushes code to GitHub and C28's automated pipeline builds, scans, and releases your application reliably.
+                                        </p>
+                                    </div>
+                                    <div class="grid grid-cols-3 gap-2 pt-3 border-t border-emerald-500/10 text-center">
+                                        <div>
+                                            <div class="text-sm font-bold text-neon-400 font-mono">0m</div>
+                                            <div class="text-[10px] text-slate-400">Release Downtime</div>
+                                        </div>
+                                        <div>
+                                            <div class="text-sm font-bold text-white font-mono">100%</div>
+                                            <div class="text-[10px] text-slate-400">Automated Checks</div>
+                                        </div>
+                                        <div>
+                                            <div class="text-sm font-bold text-neon-400 font-mono">-38%</div>
+                                            <div class="text-[10px] text-slate-400">Cloud Waste</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Trusted Core Stack Bar (Matches Logo Strip Below Hero in Reference) -->
+            <div class="mt-14 pt-8 border-t border-emerald-500/10 text-center">
+                <p class="text-xs font-mono uppercase tracking-widest text-slate-400 mb-6">
+                    PRODUCTION TECHNOLOGIES WE ARCHITECT, DEPLOY &amp; OPERATE
+                </p>
+                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4 items-center opacity-80">
+                    <div class="flex items-center justify-center gap-2 py-2 px-3 rounded-lg bg-obsidian-900/60 border border-emerald-500/10 text-slate-300 text-xs font-semibold">
+                        <span class="w-2 h-2 rounded-full bg-neon-400"></span> Docker &amp; Containers
+                    </div>
+                    <div class="flex items-center justify-center gap-2 py-2 px-3 rounded-lg bg-obsidian-900/60 border border-emerald-500/10 text-slate-300 text-xs font-semibold">
+                        <span class="w-2 h-2 rounded-full bg-neon-400"></span> GitHub Actions CI/CD
+                    </div>
+                    <div class="flex items-center justify-center gap-2 py-2 px-3 rounded-lg bg-obsidian-900/60 border border-emerald-500/10 text-slate-300 text-xs font-semibold">
+                        <span class="w-2 h-2 rounded-full bg-neon-400"></span> Linux &amp; Nginx HTTPS
+                    </div>
+                    <div class="flex items-center justify-center gap-2 py-2 px-3 rounded-lg bg-obsidian-900/60 border border-emerald-500/10 text-slate-300 text-xs font-semibold">
+                        <span class="w-2 h-2 rounded-full bg-neon-400"></span> Cloud Infrastructure
+                    </div>
+                    <div class="flex items-center justify-center gap-2 py-2 px-3 rounded-lg bg-obsidian-900/60 border border-emerald-500/10 text-slate-300 text-xs font-semibold">
+                        <span class="w-2 h-2 rounded-full bg-neon-400"></span> DevSecOps Scanning
+                    </div>
+                    <div class="flex items-center justify-center gap-2 py-2 px-3 rounded-lg bg-obsidian-900/60 border border-emerald-500/10 text-slate-300 text-xs font-semibold">
+                        <span class="w-2 h-2 rounded-full bg-neon-400"></span> Laravel / Node / SaaS
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. SECTION 2 — BENTO GRID: NEXT-LEVEL ENGINEERING & DEPLOYMENT AUTOMATION -->
+    <section id="capabilities" class="py-24 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <!-- Section Header -->
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <span class="inline-block px-3.5 py-1 rounded-full text-xs font-mono uppercase tracking-widest text-neon-400 section-badge mb-4">
+                    OUTCOME-FIRST ENGINEERING
+                </span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mb-4">
+                    Connected Software &amp; Cloud Engineering For Growing Teams
+                </h2>
+                <p class="text-slate-400 text-base leading-relaxed">
+                    A startup founder doesn't just buy a list of tools—they need to know their product will deploy cleanly, stay secure, and scale without downtime as users grow.
+                </p>
+            </div>
+
+            <!-- Bento Grid (1 Top Wide Card + 2 Bottom Split Cards matching Reference) -->
+            <div class="space-y-6">
+                <!-- Top Wide Bento Card -->
+                <div class="glass-card rounded-3xl p-6 sm:p-10 relative overflow-hidden">
+                    <div class="pointer-events-none absolute -right-20 -top-20 w-96 h-96 bg-neon-500/15 rounded-full blur-3xl"></div>
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                        <!-- Left Copy -->
+                        <div class="lg:col-span-5 space-y-5">
+                            <div class="inline-flex items-center gap-2 text-xs font-mono text-neon-400">
+                                <span class="w-2 h-2 rounded-full bg-neon-400"></span>
+                                AUTOMATED DELIVERY PIPELINES
+                            </div>
+                            <h3 class="text-2xl sm:text-3xl font-bold text-white leading-snug">
+                                Advanced Code-to-Production Workflow Automation
+                            </h3>
+                            <p class="text-sm sm:text-base text-slate-300 leading-relaxed">
+                                Stop deploying manually over FTP or SSH. We configure reproducible Docker containers, automated GitHub Actions workflows, and zero-downtime Nginx reverse proxies so every code push is tested, scanned, and deployed cleanly.
+                            </p>
+                            <div class="pt-2 flex flex-wrap items-center gap-3">
+                                <button onclick="openModal('CI/CD & Deployment Automation')" class="btn-emerald text-obsidian-950 font-bold text-xs sm:text-sm px-5 py-2.5 rounded-full">
+                                    Automate Your Releases
+                                </button>
+                                <button onclick="cycleCodeSnippet()" class="px-4 py-2.5 rounded-full text-xs font-mono text-neon-400 bg-emerald-950/60 border border-emerald-500/30 hover:bg-emerald-900/50 transition">
+                                    Switch Config File &rarr;
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Right Code Window (Glowing Green Frame like Reference) -->
+                        <div class="lg:col-span-7">
+                            <div class="rounded-2xl bg-obsidian-950/95 border border-neon-400/40 shadow-[0_0_40px_-10px_rgba(34,197,94,0.3)] overflow-hidden">
+                                <div class="px-4 py-3 bg-emerald-950/40 border-b border-emerald-500/20 flex items-center justify-between">
+                                    <div class="flex items-center gap-2">
+                                        <span class="w-2.5 h-2.5 rounded-full bg-neon-400"></span>
+                                        <span id="codeFileTitle" class="text-xs font-mono text-neon-400 font-semibold">.github/workflows/deploy-production.yml</span>
+                                    </div>
+                                    <div class="flex gap-1.5">
+                                        <button onclick="setSnippet(0)" class="snippet-btn text-[11px] font-mono px-2.5 py-1 rounded bg-emerald-500/20 text-neon-400 border border-emerald-500/30">CI/CD YAML</button>
+                                        <button onclick="setSnippet(1)" class="snippet-btn text-[11px] font-mono px-2.5 py-1 rounded text-slate-400 hover:text-white">Dockerfile</button>
+                                        <button onclick="setSnippet(2)" class="snippet-btn text-[11px] font-mono px-2.5 py-1 rounded text-slate-400 hover:text-white">nginx.conf</button>
+                                    </div>
+                                </div>
+                                <pre id="codeBlockContent" class="p-5 text-xs font-mono text-slate-200 overflow-x-auto leading-relaxed"><code><span class="text-slate-500"># Automated C28 Production Pipeline + Security Gate</span>
+<span class="text-neon-400">name:</span> Build, Scan &amp; Deploy SaaS
+<span class="text-neon-400">on:</span>
+  <span class="text-neon-400">push:</span>
+    <span class="text-neon-400">branches:</span> [ <span class="text-amber-300">"main"</span> ]
+
+<span class="text-neon-400">jobs:</span>
+  <span class="text-neon-400">secure-deploy:</span>
+    <span class="text-neon-400">runs-on:</span> ubuntu-latest
+    <span class="text-neon-400">steps:</span>
+      - <span class="text-neon-400">uses:</span> actions/checkout@v4
+      - <span class="text-neon-400">name:</span> Build Production Docker Image
+        <span class="text-neon-400">run:</span> docker build -t c28-app:${{ github.sha }} .
+      - <span class="text-neon-400">name:</span> DevSecOps Vulnerability &amp; Secret Scan
+        <span class="text-neon-400">run:</span> trivy image --exit-code 1 --severity CRITICAL c28-app:${{ github.sha }}
+      - <span class="text-neon-400">name:</span> Rollout to Production Server via SSH
+        <span class="text-neon-400">run:</span> ./scripts/zero-downtime-swap.sh</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bottom 2-Column Bento Split -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Bottom Left Card: Server Health, Monitoring & Cost Control -->
+                    <div class="glass-card rounded-3xl p-6 sm:p-8 flex flex-col justify-between">
+                        <div class="mb-6">
+                            <div class="rounded-2xl bg-obsidian-950/90 border border-emerald-500/20 p-5 mb-6">
+                                <div class="flex items-center justify-between text-xs font-mono text-slate-400 mb-4">
+                                    <span>INFRASTRUCTURE DIAGNOSTICS</span>
+                                    <span class="text-neon-400">&#9679; LIVE METRICS</span>
+                                </div>
+                                <div class="space-y-3">
+                                    <div>
+                                        <div class="flex justify-between text-xs mb-1">
+                                            <span class="text-slate-300">Deployment Reliability (Last 90 Days)</span>
+                                            <span class="font-mono text-neon-400">99.98%</span>
+                                        </div>
+                                        <div class="w-full h-2 bg-obsidian-800 rounded-full overflow-hidden">
+                                            <div class="bg-gradient-to-r from-emerald-600 to-neon-400 h-full w-[99%]"></div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="flex justify-between text-xs mb-1">
+                                            <span class="text-slate-300">Linux Disk &amp; Memory Headroom</span>
+                                            <span class="font-mono text-emerald-300">34% Used (Healthy)</span>
+                                        </div>
+                                        <div class="w-full h-2 bg-obsidian-800 rounded-full overflow-hidden">
+                                            <div class="bg-gradient-to-r from-emerald-600 to-neon-400 h-full w-[34%]"></div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="flex justify-between text-xs mb-1">
+                                            <span class="text-slate-300">Cloud Cost Optimization After Audit</span>
+                                            <span class="font-mono text-neon-400">-32% Monthly Spend</span>
+                                        </div>
+                                        <div class="w-full h-2 bg-obsidian-800 rounded-full overflow-hidden">
+                                            <div class="bg-gradient-to-r from-emerald-600 to-neon-400 h-full w-[68%]"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <h3 class="text-xl font-bold text-white mb-2">
+                                Operational Monitoring &amp; Cloud Cost Control
+                            </h3>
+                            <p class="text-sm text-slate-400 leading-relaxed">
+                                Already running in the cloud but dealing with fragile releases, server disk surprises, or rising bills? We audit existing setups, configure Linux &amp; application monitoring, and right-size your infrastructure.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Bottom Right Card: DevSecOps Hub Diagram -->
+                    <div class="glass-card rounded-3xl p-6 sm:p-8 flex flex-col justify-between">
+                        <div>
+                            <!-- Visual Hub Diagram matching reference right card -->
+                            <div class="rounded-2xl bg-obsidian-950/90 border border-emerald-500/20 p-6 mb-6 relative overflow-hidden">
+                                <div class="text-center text-[11px] font-mono uppercase tracking-widest text-slate-400 mb-4">
+                                    DEVSECOPS INTEGRATED SECURITY CHECKS
+                                </div>
+                                <div class="grid grid-cols-3 gap-2 items-center my-2">
+                                    <div class="space-y-2">
+                                        <div class="px-3 py-2 rounded-lg bg-emerald-950/50 border border-emerald-500/30 text-[11px] font-mono text-slate-200 text-center">
+                                            Dependency Scan
+                                        </div>
+                                        <div class="px-3 py-2 rounded-lg bg-emerald-950/50 border border-emerald-500/30 text-[11px] font-mono text-slate-200 text-center">
+                                            Secret Vaulting
+                                        </div>
+                                    </div>
+                                    <div class="flex flex-col items-center justify-center">
+                                        <div class="w-16 h-16 rounded-2xl btn-emerald flex flex-col items-center justify-center text-obsidian-950 font-extrabold shadow-xl">
+                                            <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                                            <span class="text-[9px] font-mono mt-0.5">SECURED</span>
+                                        </div>
+                                    </div>
+                                    <div class="space-y-2">
+                                        <div class="px-3 py-2 rounded-lg bg-emerald-950/50 border border-emerald-500/30 text-[11px] font-mono text-slate-200 text-center">
+                                            Container Audit
+                                        </div>
+                                        <div class="px-3 py-2 rounded-lg bg-emerald-950/50 border border-emerald-500/30 text-[11px] font-mono text-slate-200 text-center">
+                                            HTTPS / TLS 1.3
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <h3 class="text-xl font-bold text-white mb-2">
+                                Practical DevSecOps Built Into Delivery
+                            </h3>
+                            <p class="text-sm text-slate-400 leading-relaxed">
+                                Security shouldn't be an afterthought. We eliminate hardcoded API keys from repositories, scan Docker images for known vulnerabilities, separate dev and production secrets, and enforce strict HTTPS/Nginx headers.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. SECTION 3 — HOW OUR C28 SYSTEM WORKS: FOUR INTERCONNECTED SERVICES (Matches 5-Card + Pill Cloud Section in Reference) -->
+    <section id="services" class="py-24 relative bg-obsidian-900/40 border-y border-emerald-500/10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <!-- Section Header -->
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <span class="inline-block px-3.5 py-1 rounded-full text-xs font-mono uppercase tracking-widest text-neon-400 section-badge mb-4">
+                    UNIFIED SERVICE ARCHITECTURE
+                </span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mb-4">
+                    How Our Connected Engineering Studio Works
+                </h2>
+                <p class="text-slate-400 text-base leading-relaxed">
+                    These four disciplines aren't separate businesses—they form one connected offering. We build the software, deploy it, integrate security into the delivery process, and maintain the infrastructure that runs it.
+                </p>
+            </div>
+
+            <!-- 3-Column Layout: Left Tall Highlight Card + Right 2x2 Grid of 4 Services -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                <!-- Left Tall Highlight Card (Matches glowing green left card in Reference) -->
+                <div class="lg:col-span-4 glass-card-highlight rounded-3xl p-8 flex flex-col justify-between relative overflow-hidden">
+                    <div>
+                        <div class="w-12 h-12 rounded-xl btn-emerald flex items-center justify-center text-obsidian-950 font-extrabold text-lg mb-6">
+                            C28
+                        </div>
+                        <span class="text-xs font-mono uppercase tracking-widest text-neon-400 block mb-2">
+                            DIRECT ENGINEERING PARTNER
+                        </span>
+                        <h3 class="text-2xl sm:text-3xl font-extrabold text-white leading-tight mb-4">
+                            One Cohesive Partner From Code to Cloud
+                        </h3>
+                        <p class="text-sm text-slate-200/90 leading-relaxed mb-6">
+                            Work directly with an engineer who understands both full-stack web application development and the Linux, Docker, and cloud infrastructure required to run it reliably in production.
+                        </p>
+                        <ul class="space-y-2.5 text-xs text-slate-200 mb-8">
+                            <li class="flex items-center gap-2">
+                                <span class="w-1.5 h-1.5 rounded-full bg-neon-400"></span>
+                                Zero layers of corporate account bloat
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <span class="w-1.5 h-1.5 rounded-full bg-neon-400"></span>
+                                Clear documentation &amp; full repository handoff
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <span class="w-1.5 h-1.5 rounded-full bg-neon-400"></span>
+                                Scoped to deliverables we execute with confidence
+                            </li>
+                        </ul>
+                    </div>
+                    <button onclick="openModal('Full Studio Discovery')" class="btn-emerald text-obsidian-950 font-bold text-sm px-6 py-3.5 rounded-full w-full flex items-center justify-center gap-2">
+                        <span>Start Your Project</span>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                    </button>
+                </div>
+
+                <!-- Right 2x2 Grid of the 4 Core Services -->
+                <div class="lg:col-span-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Service 1: DevOps & Cloud Engineering (Primary) -->
+                    <div class="glass-card rounded-3xl p-7 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between mb-5">
+                                <div class="w-10 h-10 rounded-xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-neon-400">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01"/></svg>
+                                </div>
+                                <span class="text-[11px] font-mono uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-emerald-500/15 text-neon-400 border border-emerald-500/30">
+                                    01 • Primary Service
+                                </span>
+                            </div>
+                            <h3 class="text-lg font-bold text-white mb-2">DevOps &amp; Cloud Engineering</h3>
+                            <p class="text-xs sm:text-sm text-slate-400 leading-relaxed mb-4">
+                                Automate software delivery and infrastructure operations so your team can push code and deploy reliably.
+                            </p>
+                        </div>
+                        <div class="pt-4 border-t border-emerald-500/10 text-xs text-slate-300 space-y-1.5 font-mono">
+                            <div>&bull; CI/CD pipeline implementation</div>
+                            <div>&bull; Docker-based application deployment</div>
+                            <div>&bull; Linux server, Nginx &amp; monitoring setup</div>
+                        </div>
+                    </div>
+
+                    <!-- Service 2: DevSecOps (Secondary) -->
+                    <div class="glass-card rounded-3xl p-7 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between mb-5">
+                                <div class="w-10 h-10 rounded-xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-neon-400">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                                </div>
+                                <span class="text-[11px] font-mono uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-300 border border-emerald-500/20">
+                                    02 • Secondary Service
+                                </span>
+                            </div>
+                            <h3 class="text-lg font-bold text-white mb-2">DevSecOps Integration</h3>
+                            <p class="text-xs sm:text-sm text-slate-400 leading-relaxed mb-4">
+                                Connect practical security checks directly to your development and deployment workflows without slowing releases.
+                            </p>
+                        </div>
+                        <div class="pt-4 border-t border-emerald-500/10 text-xs text-slate-300 space-y-1.5 font-mono">
+                            <div>&bull; Dependency &amp; vulnerability scanning</div>
+                            <div>&bull; Container image security checks</div>
+                            <div>&bull; Secret management &amp; secure pipelines</div>
+                        </div>
+                    </div>
+
+                    <!-- Service 3: Software Development (Supporting) -->
+                    <div class="glass-card rounded-3xl p-7 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between mb-5">
+                                <div class="w-10 h-10 rounded-xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-neon-400">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg>
+                                </div>
+                                <span class="text-[11px] font-mono uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-white/5 text-slate-300 border border-white/10">
+                                    03 • Supporting Service
+                                </span>
+                            </div>
+                            <h3 class="text-lg font-bold text-white mb-2">Software Development</h3>
+                            <p class="text-xs sm:text-sm text-slate-400 leading-relaxed mb-4">
+                                Build modern web applications and digital products engineered from day one for clean deployment and maintainability.
+                            </p>
+                        </div>
+                        <div class="pt-4 border-t border-emerald-500/10 text-xs text-slate-300 space-y-1.5 font-mono">
+                            <div>&bull; SaaS applications &amp; business web apps</div>
+                            <div>&bull; APIs, backend systems &amp; dashboards</div>
+                            <div>&bull; Ongoing application maintenance</div>
+                        </div>
+                    </div>
+
+                    <!-- Service 4: Website Development (Supporting) -->
+                    <div class="glass-card rounded-3xl p-7 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between mb-5">
+                                <div class="w-10 h-10 rounded-xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-neon-400">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"/></svg>
+                                </div>
+                                <span class="text-[11px] font-mono uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-white/5 text-slate-300 border border-white/10">
+                                    04 • Supporting Service
+                                </span>
+                            </div>
+                            <h3 class="text-lg font-bold text-white mb-2">Website Development</h3>
+                            <p class="text-xs sm:text-sm text-slate-400 leading-relaxed mb-4">
+                                High-craft marketing websites, landing pages, and e-commerce builds optimized for speed and technical SEO.
+                            </p>
+                        </div>
+                        <div class="pt-4 border-t border-emerald-500/10 text-xs text-slate-300 space-y-1.5 font-mono">
+                            <div>&bull; Business websites &amp; landing pages</div>
+                            <div>&bull; E-commerce &amp; website redesigns</div>
+                            <div>&bull; Performance &amp; technical SEO tuning</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2-Row Pill Tag Cloud Below Services (Matches Reference Tag Rows) -->
+            <div class="mt-10 flex flex-wrap items-center justify-center gap-2.5">
+                <span class="px-3.5 py-1.5 rounded-full text-xs font-mono bg-obsidian-950/90 text-slate-300 border border-emerald-500/20"><span class="text-neon-400">#</span>DockerDeployment</span>
+                <span class="px-3.5 py-1.5 rounded-full text-xs font-mono bg-obsidian-950/90 text-slate-300 border border-emerald-500/20"><span class="text-neon-400">#</span>GitHubActions</span>
+                <span class="px-3.5 py-1.5 rounded-full text-xs font-mono bg-obsidian-950/90 text-slate-300 border border-emerald-500/20"><span class="text-neon-400">#</span>CICDPipelines</span>
+                <span class="px-3.5 py-1.5 rounded-full text-xs font-mono bg-obsidian-950/90 text-slate-300 border border-emerald-500/20"><span class="text-neon-400">#</span>NginxHTTPS</span>
+                <span class="px-3.5 py-1.5 rounded-full text-xs font-mono bg-obsidian-950/90 text-slate-300 border border-emerald-500/20"><span class="text-neon-400">#</span>LinuxServerConfig</span>
+                <span class="px-3.5 py-1.5 rounded-full text-xs font-mono bg-obsidian-950/90 text-slate-300 border border-emerald-500/20"><span class="text-neon-400">#</span>SecretManagement</span>
+                <span class="px-3.5 py-1.5 rounded-full text-xs font-mono bg-obsidian-950/90 text-slate-300 border border-emerald-500/20"><span class="text-neon-400">#</span>ContainerScanning</span>
+                <span class="px-3.5 py-1.5 rounded-full text-xs font-mono bg-obsidian-950/90 text-slate-300 border border-emerald-500/20"><span class="text-neon-400">#</span>SaaSDevelopment</span>
+                <span class="px-3.5 py-1.5 rounded-full text-xs font-mono bg-obsidian-950/90 text-slate-300 border border-emerald-500/20"><span class="text-neon-400">#</span>CustomDashboards</span>
+                <span class="px-3.5 py-1.5 rounded-full text-xs font-mono bg-obsidian-950/90 text-slate-300 border border-emerald-500/20"><span class="text-neon-400">#</span>CloudMonitoring</span>
+                <span class="px-3.5 py-1.5 rounded-full text-xs font-mono bg-obsidian-950/90 text-slate-300 border border-emerald-500/20"><span class="text-neon-400">#</span>TechnicalSEO</span>
+                <span class="px-3.5 py-1.5 rounded-full text-xs font-mono bg-obsidian-950/90 text-slate-300 border border-emerald-500/20"><span class="text-neon-400">#</span>ZeroDowntimeReleases</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. SECTION 4 — 10-STEP PRODUCTION BLUEPRINT (Matches Reference Center Glowing Canvas + 3 Bottom Cards) -->
+    <section id="blueprint" class="py-24 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-14">
+                <span class="inline-block px-3.5 py-1 rounded-full text-xs font-mono uppercase tracking-widest text-neon-400 section-badge mb-4">
+                    PROVEN DELIVERY SEQUENCE
+                </span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mb-4">
+                    From Local Application To Hardened Production
+                </h2>
+                <p class="text-slate-400 text-base leading-relaxed">
+                    Click any milestone in our 10-step engineering blueprint below to inspect how we take a web application from local source code to a monitored, automated production server.
+                </p>
+            </div>
+
+            <!-- Large Glowing Green Framed Canvas (Matches Center Feature Box in Reference) -->
+            <div class="rounded-3xl p-6 sm:p-10 relative overflow-hidden border border-neon-400/35 bg-gradient-to-b from-emerald-950/50 via-obsidian-900/95 to-obsidian-950 shadow-[0_0_60px_-15px_rgba(34,197,94,0.25)] mb-6">
+                <div class="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(34,197,94,0.16)_0%,transparent_70%)]"></div>
+
+                <!-- Interactive 10-Node Pill Grid inside Glowing Frame -->
+                <div class="relative z-10 max-w-4xl mx-auto">
+                    <div class="grid grid-cols-2 sm:grid-cols-5 gap-3 mb-8" id="blueprintNodes">
+                        <!-- Generated / interactive via JS -->
+                    </div>
+
+                    <!-- Active Step Inspector Drawer -->
+                    <div class="glass-card rounded-2xl p-6 border border-emerald-500/30">
+                        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 mb-4 border-b border-emerald-500/15">
+                            <div>
+                                <span id="bpStepNumber" class="text-xs font-mono uppercase tracking-widest text-neon-400">STEP 03 OF 10 • CONTAINERIZATION</span>
+                                <h3 id="bpStepTitle" class="text-xl font-bold text-white mt-0.5">Containerize Application Using Docker</h3>
+                            </div>
+                            <span id="bpStepDeliverable" class="text-xs font-mono px-3 py-1.5 rounded-lg bg-emerald-500/15 text-neon-400 border border-emerald-500/30 self-start md:self-center">
+                                Deliverable: Multi-stage Dockerfile &amp; Compose
+                            </span>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
+                            <div class="md:col-span-7">
+                                <p id="bpStepProblem" class="text-sm text-slate-300 leading-relaxed mb-3">
+                                    Eliminates "it works on my laptop, but fails on the server." We package your web application, runtime dependencies, and web server into a deterministic, lightweight container image.
+                                </p>
+                                <div id="bpStepOutcome" class="text-xs text-neon-400 font-medium">
+                                    &#10003; Outcome: Identical behavior across local development, staging, and production Linux hosts.
+                                </div>
+                            </div>
+                            <div class="md:col-span-5 bg-obsidian-950/90 rounded-xl p-3.5 border border-emerald-500/20 font-mono text-[11px] text-slate-300">
+                                <div class="text-slate-500 mb-1">// Verification Command</div>
+                                <div id="bpStepCommand" class="text-neon-400">$ docker compose -f docker-compose.prod.yml up -d --build</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3 Bottom Feature Cards below the Glowing Canvas (Matches Reference) -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="glass-card rounded-2xl p-6">
+                    <div class="w-9 h-9 rounded-lg bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-neon-400 font-mono text-xs font-bold mb-4">
+                        01-03
+                    </div>
+                    <h4 class="text-base font-bold text-white mb-2">Application &amp; Container Foundation</h4>
+                    <p class="text-xs sm:text-sm text-slate-400 leading-relaxed">
+                        We structure your codebase cleanly in GitHub and containerize the application with Docker so deployments are portable and repeatable.
+                    </p>
+                </div>
+                <div class="glass-card rounded-2xl p-6">
+                    <div class="w-9 h-9 rounded-lg bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-neon-400 font-mono text-xs font-bold mb-4">
+                        04-07
+                    </div>
+                    <h4 class="text-base font-bold text-white mb-2">Server, Nginx, CI/CD &amp; Security</h4>
+                    <p class="text-xs sm:text-sm text-slate-400 leading-relaxed">
+                        We provision Linux servers, configure Nginx reverse proxies with HTTPS, automate GitHub Actions pipelines, and embed DevSecOps checks.
+                    </p>
+                </div>
+                <div class="glass-card rounded-2xl p-6">
+                    <div class="w-9 h-9 rounded-lg bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-neon-400 font-mono text-xs font-bold mb-4">
+                        08-10
+                    </div>
+                    <h4 class="text-base font-bold text-white mb-2">Monitoring &amp; Architecture Handoff</h4>
+                    <p class="text-xs sm:text-sm text-slate-400 leading-relaxed">
+                        We set up uptime and disk/resource alerts, document the complete architecture, and hand over a system your team can operate with confidence.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 6. SECTION 5 — SIMPLE TRANSPARENT ENGAGEMENT MODELS (Matches 3-Column Pricing Section with Highlighted Center Card) -->
+    <section id="engagement" class="py-24 relative bg-obsidian-900/40 border-y border-emerald-500/10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-12">
+                <span class="inline-block px-3.5 py-1 rounded-full text-xs font-mono uppercase tracking-widest text-neon-400 section-badge mb-4">
+                    ENGAGEMENT OPTIONS
+                </span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mb-4">
+                    Simple, Transparent Engagements Built For Startups
+                </h2>
+                <p class="text-slate-400 text-base leading-relaxed mb-8">
+                    Start with a well-defined deployment sprint or partner with C28 for full-cycle software development and ongoing cloud operations.
+                </p>
+
+                <!-- Toggle Switch (Project Sprint vs Monthly Retainer) -->
+                <div class="inline-flex items-center p-1.5 rounded-full bg-obsidian-950 border border-emerald-500/25">
+                    <button id="btnModeSprint" onclick="setPricingMode('sprint')" class="px-5 py-2 rounded-full text-xs font-bold transition-all btn-emerald text-obsidian-950">
+                        Fixed-Scope Project Sprint
+                    </button>
+                    <button id="btnModeRetainer" onclick="setPricingMode('retainer')" class="px-5 py-2 rounded-full text-xs font-semibold text-slate-400 hover:text-white transition-all">
+                        Ongoing Engineering Retainer
+                    </button>
+                </div>
+            </div>
+
+            <!-- 3 Engagement Cards -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-7 items-stretch">
+                <!-- Card 1: Deployment & Infrastructure Foundation -->
+                <div class="glass-card rounded-3xl p-8 flex flex-col justify-between">
+                    <div>
+                        <div class="text-xs font-mono uppercase tracking-wider text-slate-400 mb-2">01 / LAUNCH READY</div>
+                        <h3 class="text-xl font-bold text-white mb-2">Deployment &amp; Server Setup</h3>
+                        <p class="text-xs text-slate-400 mb-6">
+                            Ideal for founders who have a finished web or SaaS application and need it deployed cleanly and securely to production.
+                        </p>
+                        <div class="mb-6 pb-6 border-b border-emerald-500/15">
+                            <span id="priceCard1" class="text-3xl sm:text-4xl font-extrabold text-white">$1,200</span>
+                            <span id="unitCard1" class="text-xs text-slate-400 font-mono ml-1">/ typical sprint</span>
+                        </div>
+                        <div class="text-xs font-semibold text-slate-300 uppercase tracking-wider mb-3">What's Included:</div>
+                        <ul class="space-y-3 text-xs sm:text-sm text-slate-300 mb-8">
+                            <li class="flex items-start gap-2.5">
+                                <span class="text-neon-400 font-bold">&#10003;</span>
+                                <span>Docker containerization for your web app</span>
+                            </li>
+                            <li class="flex items-start gap-2.5">
+                                <span class="text-neon-400 font-bold">&#10003;</span>
+                                <span>Linux server provisioning &amp; firewall setup</span>
+                            </li>
+                            <li class="flex items-start gap-2.5">
+                                <span class="text-neon-400 font-bold">&#10003;</span>
+                                <span>Nginx reverse proxy, domain &amp; HTTPS/SSL</span>
+                            </li>
+                            <li class="flex items-start gap-2.5">
+                                <span class="text-neon-400 font-bold">&#10003;</span>
+                                <span>Environment &amp; production secret separation</span>
+                            </li>
+                            <li class="flex items-start gap-2.5">
+                                <span class="text-neon-400 font-bold">&#10003;</span>
+                                <span>Architecture &amp; runbook documentation</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <button onclick="openModal('Deployment & Server Setup')" class="w-full py-3.5 px-5 rounded-full text-xs sm:text-sm font-bold text-white bg-white/5 hover:bg-emerald-500/20 border border-emerald-500/30 transition">
+                        Request Deployment Scope &rarr;
+                    </button>
+                </div>
+
+                <!-- Card 2: Full DevOps & DevSecOps Automation (POPULAR - Highlighted Green Glow) -->
+                <div class="glass-card-highlight rounded-3xl p-8 flex flex-col justify-between relative transform lg:-translate-y-2">
+                    <div>
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-xs font-mono uppercase tracking-wider text-neon-400">02 / CORE SPECIALIZATION</span>
+                            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase bg-neon-400 text-obsidian-950">
+                                MOST POPULAR
+                            </span>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-2">DevOps &amp; DevSecOps Pipeline</h3>
+                        <p class="text-xs text-slate-200/80 mb-6">
+                            Complete CI/CD automation, vulnerability scanning, and production monitoring for growing SaaS teams.
+                        </p>
+                        <div class="mb-6 pb-6 border-b border-emerald-500/25">
+                            <span id="priceCard2" class="text-3xl sm:text-4xl font-extrabold text-white">$2,500</span>
+                            <span id="unitCard2" class="text-xs text-neon-400 font-mono ml-1">/ typical sprint</span>
+                        </div>
+                        <div class="text-xs font-semibold text-white uppercase tracking-wider mb-3">Everything in Launch, plus:</div>
+                        <ul class="space-y-3 text-xs sm:text-sm text-slate-100 mb-8">
+                            <li class="flex items-start gap-2.5">
+                                <span class="text-neon-400 font-bold">&#10003;</span>
+                                <span>Automated GitHub Actions CI/CD pipelines</span>
+                            </li>
+                            <li class="flex items-start gap-2.5">
+                                <span class="text-neon-400 font-bold">&#10003;</span>
+                                <span>Automated dependency &amp; Docker image scanning</span>
+                            </li>
+                            <li class="flex items-start gap-2.5">
+                                <span class="text-neon-400 font-bold">&#10003;</span>
+                                <span>Staging &amp; production environment isolation</span>
+                            </li>
+                            <li class="flex items-start gap-2.5">
+                                <span class="text-neon-400 font-bold">&#10003;</span>
+                                <span>Uptime, server resource &amp; log monitoring</span>
+                            </li>
+                            <li class="flex items-start gap-2.5">
+                                <span class="text-neon-400 font-bold">&#10003;</span>
+                                <span>Cloud cost audit &amp; operational walkthrough</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <button onclick="openModal('DevOps & DevSecOps Pipeline')" class="btn-emerald w-full py-3.5 px-5 rounded-full text-xs sm:text-sm font-bold text-obsidian-950">
+                        Book Pipeline Consultation &rarr;
+                    </button>
+                </div>
+
+                <!-- Card 3: Custom Software + Cloud Studio -->
+                <div class="glass-card rounded-3xl p-8 flex flex-col justify-between">
+                    <div>
+                        <div class="text-xs font-mono uppercase tracking-wider text-slate-400 mb-2">03 / END-TO-END STUDIO</div>
+                        <h3 class="text-xl font-bold text-white mb-2">Software + Cloud Engineering</h3>
+                        <p class="text-xs text-slate-400 mb-6">
+                            For businesses that need a custom web application, SaaS platform, or high-performance website built and deployed under one roof.
+                        </p>
+                        <div class="mb-6 pb-6 border-b border-emerald-500/15">
+                            <span id="priceCard3" class="text-3xl sm:text-4xl font-extrabold text-white">$4,200+</span>
+                            <span id="unitCard3" class="text-xs text-slate-400 font-mono ml-1">/ custom build</span>
+                        </div>
+                        <div class="text-xs font-semibold text-slate-300 uppercase tracking-wider mb-3">Full Studio Deliverables:</div>
+                        <ul class="space-y-3 text-xs sm:text-sm text-slate-300 mb-8">
+                            <li class="flex items-start gap-2.5">
+                                <span class="text-neon-400 font-bold">&#10003;</span>
+                                <span>Custom SaaS, web app, or business website build</span>
+                            </li>
+                            <li class="flex items-start gap-2.5">
+                                <span class="text-neon-400 font-bold">&#10003;</span>
+                                <span>Backend APIs, databases &amp; admin dashboards</span>
+                            </li>
+                            <li class="flex items-start gap-2.5">
+                                <span class="text-neon-400 font-bold">&#10003;</span>
+                                <span>Complete Docker + CI/CD production pipeline</span>
+                            </li>
+                            <li class="flex items-start gap-2.5">
+                                <span class="text-neon-400 font-bold">&#10003;</span>
+                                <span>Integrated DevSecOps &amp; performance SEO</span>
+                            </li>
+                            <li class="flex items-start gap-2.5">
+                                <span class="text-neon-400 font-bold">&#10003;</span>
+                                <span>Ongoing maintenance &amp; infrastructure support</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <button onclick="openModal('Software + Cloud Studio')" class="w-full py-3.5 px-5 rounded-full text-xs sm:text-sm font-bold text-white bg-white/5 hover:bg-emerald-500/20 border border-emerald-500/30 transition">
+                        Scope Your Product Build &rarr;
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 7. SECTION 6 — REAL FOUNDER SCENARIOS WE SOLVE (Matches 3x2 Testimonial/Scenario Grid in Reference) -->
+    <section id="scenarios" class="py-24 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <span class="inline-block px-3.5 py-1 rounded-full text-xs font-mono uppercase tracking-widest text-neon-400 section-badge mb-4">
+                    FOUNDER BOTTLENECKS SOLVED
+                </span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mb-4">
+                    Real Engineering Problems We Solve For Teams
+                </h2>
+                <p class="text-slate-400 text-base leading-relaxed">
+                    Whether you're moving from local development to your first production server or modernizing a fragile manual workflow, here is how C28 steps in.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Scenario 1 -->
+                <div class="glass-card rounded-2xl p-6 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-9 h-9 rounded-full bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center text-neon-400 font-mono text-xs font-bold">S1</div>
+                            <div>
+                                <div class="text-xs font-bold text-white">SaaS Founder Scenario</div>
+                                <div class="text-[11px] text-slate-400">Post-Development Bottleneck</div>
+                            </div>
+                        </div>
+                        <p class="text-xs sm:text-sm text-slate-300 italic mb-4">
+                            "Our developer finished writing the application code, but now we need to connect our domain, configure a production server, and get it live safely."
+                        </p>
+                    </div>
+                    <div class="pt-3 border-t border-emerald-500/15 text-xs text-neon-400 font-mono">
+                        &rarr; C28 Solution: Containerized Docker setup + Nginx + HTTPS + Live Server Handoff.
+                    </div>
+                </div>
+
+                <!-- Scenario 2 -->
+                <div class="glass-card rounded-2xl p-6 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-9 h-9 rounded-full bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center text-neon-400 font-mono text-xs font-bold">S2</div>
+                            <div>
+                                <div class="text-xs font-bold text-white">Engineering Lead Scenario</div>
+                                <div class="text-[11px] text-slate-400">Fragile Manual Releases</div>
+                            </div>
+                        </div>
+                        <p class="text-xs sm:text-sm text-slate-300 italic mb-4">
+                            "Every time we push new features to GitHub, someone has to SSH into the server manually and run commands—and deployments keep causing downtime."
+                        </p>
+                    </div>
+                    <div class="pt-3 border-t border-emerald-500/15 text-xs text-neon-400 font-mono">
+                        &rarr; C28 Solution: Automated GitHub Actions CI/CD pipeline with health-checked rollouts.
+                    </div>
+                </div>
+
+                <!-- Scenario 3 -->
+                <div class="glass-card rounded-2xl p-6 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-9 h-9 rounded-full bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center text-neon-400 font-mono text-xs font-bold">S3</div>
+                            <div>
+                                <div class="text-xs font-bold text-white">Security &amp; Compliance Scenario</div>
+                                <div class="text-[11px] text-slate-400">Pipeline Vulnerability Risk</div>
+                            </div>
+                        </div>
+                        <p class="text-xs sm:text-sm text-slate-300 italic mb-4">
+                            "We want to make sure API keys aren't leaked in git history and our dependencies and Docker images are checked for vulnerabilities before release."
+                        </p>
+                    </div>
+                    <div class="pt-3 border-t border-emerald-500/15 text-xs text-neon-400 font-mono">
+                        &rarr; C28 Solution: DevSecOps secret management + automated Trivy &amp; dependency scanning.
+                    </div>
+                </div>
+
+                <!-- Scenario 4 -->
+                <div class="glass-card rounded-2xl p-6 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-9 h-9 rounded-full bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center text-neon-400 font-mono text-xs font-bold">S4</div>
+                            <div>
+                                <div class="text-xs font-bold text-white">Growing Startup Scenario</div>
+                                <div class="text-[11px] text-slate-400">Blind Production Operations</div>
+                            </div>
+                        </div>
+                        <p class="text-xs sm:text-sm text-slate-300 italic mb-4">
+                            "Our app is live on AWS, but we have no alerts if disk usage fills up or the server goes down—and our monthly cloud bill keeps creeping up."
+                        </p>
+                    </div>
+                    <div class="pt-3 border-t border-emerald-500/15 text-xs text-neon-400 font-mono">
+                        &rarr; C28 Solution: Linux &amp; uptime monitoring + infrastructure audit &amp; cost optimization.
+                    </div>
+                </div>
+
+                <!-- Scenario 5 -->
+                <div class="glass-card rounded-2xl p-6 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-9 h-9 rounded-full bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center text-neon-400 font-mono text-xs font-bold">S5</div>
+                            <div>
+                                <div class="text-xs font-bold text-white">Product Builder Scenario</div>
+                                <div class="text-[11px] text-slate-400">Full-Cycle Build + Cloud</div>
+                            </div>
+                        </div>
+                        <p class="text-xs sm:text-sm text-slate-300 italic mb-4">
+                            "We need a custom internal dashboard and backend API built from scratch, and we don't want to hire one agency for code and another for hosting."
+                        </p>
+                    </div>
+                    <div class="pt-3 border-t border-emerald-500/15 text-xs text-neon-400 font-mono">
+                        &rarr; C28 Solution: End-to-end web application development + production cloud deployment.
+                    </div>
+                </div>
+
+                <!-- Scenario 6 -->
+                <div class="glass-card rounded-2xl p-6 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-9 h-9 rounded-full bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center text-neon-400 font-mono text-xs font-bold">S6</div>
+                            <div>
+                                <div class="text-xs font-bold text-white">Business Brand Scenario</div>
+                                <div class="text-[11px] text-slate-400">Conversion &amp; Technical SEO</div>
+                            </div>
+                        </div>
+                        <p class="text-xs sm:text-sm text-slate-300 italic mb-4">
+                            "Our company website looks outdated and loads slowly. We need a sharp redesign that communicates our value and performs well on search engines."
+                        </p>
+                    </div>
+                    <div class="pt-3 border-t border-emerald-500/15 text-xs text-neon-400 font-mono">
+                        &rarr; C28 Solution: High-conversion website development, speed optimization &amp; technical SEO.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 8. SECTION 7 — SPLIT FAQ SECTION (Left Heading + Right Accordion matching Reference) -->
+    <section id="faq" class="py-24 relative bg-obsidian-900/40 border-y border-emerald-500/10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+                <!-- Left Column -->
+                <div class="lg:col-span-5">
+                    <span class="inline-block px-3.5 py-1 rounded-full text-xs font-mono uppercase tracking-widest text-neon-400 section-badge mb-4">
+                        FAQ
+                    </span>
+                    <h2 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mb-4">
+                        Have Any Questions?
+                    </h2>
+                    <p class="text-slate-400 text-sm sm:text-base leading-relaxed mb-8">
+                        Clear answers on how C28 combines software development, DevOps automation, and DevSecOps into practical engagements for startups and growing businesses.
+                    </p>
+                    <div class="glass-card rounded-2xl p-6 border border-emerald-500/25">
+                        <div class="text-sm font-bold text-white mb-1">Have a specific architecture question?</div>
+                        <p class="text-xs text-slate-400 mb-4">
+                            Tell us about your current codebase or server setup and we'll give you an honest assessment of the best next step.
+                        </p>
+                        <button onclick="openModal('Architecture Question')" class="btn-emerald text-obsidian-950 font-bold text-xs px-5 py-2.5 rounded-full">
+                            Ask an Engineer &rarr;
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Right Column Accordion -->
+                <div class="lg:col-span-7 space-y-3" id="faqAccordion">
+                    <!-- FAQ 1 -->
+                    <div class="glass-card rounded-2xl overflow-hidden">
+                        <button onclick="toggleFaq(0)" class="w-full px-6 py-5 text-left flex items-center justify-between gap-4">
+                            <span class="text-sm sm:text-base font-bold text-white">How do Software Development, DevOps, and DevSecOps fit together at C28?</span>
+                            <span id="faqIcon0" class="text-neon-400 font-mono text-lg transition-transform duration-200">&minus;</span>
+                        </button>
+                        <div id="faqBody0" class="px-6 pb-5 text-xs sm:text-sm text-slate-300 leading-relaxed border-t border-emerald-500/10 pt-4">
+                            They form one connected offering. Many clients hire a developer to build a web application, only to get stuck figuring out how to containerize it, configure Linux/Nginx, automate deployments, and secure secrets. Because C28 bridges full-stack web development with cloud and DevOps engineering, we can build your product, automate its release pipeline, and maintain it in production.
+                        </div>
+                    </div>
+
+                    <!-- FAQ 2 -->
+                    <div class="glass-card rounded-2xl overflow-hidden">
+                        <button onclick="toggleFaq(1)" class="w-full px-6 py-5 text-left flex items-center justify-between gap-4">
+                            <span class="text-sm sm:text-base font-bold text-white">We already have an application built. Can we hire C28 just for deployment &amp; CI/CD?</span>
+                            <span id="faqIcon1" class="text-neon-400 font-mono text-lg transition-transform duration-200">+</span>
+                        </button>
+                        <div id="faqBody1" class="hidden px-6 pb-5 text-xs sm:text-sm text-slate-300 leading-relaxed border-t border-emerald-500/10 pt-4">
+                            Yes—DevOps and Cloud Engineering is our primary specialization. If your developer or internal team has already written the application code, we can step in to containerize it with Docker, configure your production server and HTTPS domain, set up automated GitHub Actions pipelines, and implement basic health monitoring.
+                        </div>
+                    </div>
+
+                    <!-- FAQ 3 -->
+                    <div class="glass-card rounded-2xl overflow-hidden">
+                        <button onclick="toggleFaq(2)" class="w-full px-6 py-5 text-left flex items-center justify-between gap-4">
+                            <span class="text-sm sm:text-base font-bold text-white">What kind of DevSecOps security checks do you implement?</span>
+                            <span id="faqIcon2" class="text-neon-400 font-mono text-lg transition-transform duration-200">+</span>
+                        </button>
+                        <div id="faqBody2" class="hidden px-6 pb-5 text-xs sm:text-sm text-slate-300 leading-relaxed border-t border-emerald-500/10 pt-4">
+                            We focus on practical, high-impact security integrated into your delivery workflow: removing hardcoded API keys and secrets from source code, separating development and production environment credentials, scanning dependencies and Docker container images for known vulnerabilities inside CI/CD, and hardening Nginx/HTTPS configurations.
+                        </div>
+                    </div>
+
+                    <!-- FAQ 4 -->
+                    <div class="glass-card rounded-2xl overflow-hidden">
+                        <button onclick="toggleFaq(3)" class="w-full px-6 py-5 text-left flex items-center justify-between gap-4">
+                            <span class="text-sm sm:text-base font-bold text-white">Do we retain full ownership of our servers, cloud accounts, and code?</span>
+                            <span id="faqIcon3" class="text-neon-400 font-mono text-lg transition-transform duration-200">+</span>
+                        </button>
+                        <div id="faqBody3" class="hidden px-6 pb-5 text-xs sm:text-sm text-slate-300 leading-relaxed border-t border-emerald-500/10 pt-4">
+                            100%. Every Dockerfile, GitHub Actions workflow, Nginx configuration, and application repository lives directly in your organization's accounts. We also provide clear architecture documentation so your team understands how everything fits together.
+                        </div>
+                    </div>
+
+                    <!-- FAQ 5 -->
+                    <div class="glass-card rounded-2xl overflow-hidden">
+                        <button onclick="toggleFaq(4)" class="w-full px-6 py-5 text-left flex items-center justify-between gap-4">
+                            <span class="text-sm sm:text-base font-bold text-white">How do we start a project with C28?</span>
+                            <span id="faqIcon4" class="text-neon-400 font-mono text-lg transition-transform duration-200">+</span>
+                        </button>
+                        <div id="faqBody4" class="hidden px-6 pb-5 text-xs sm:text-sm text-slate-300 leading-relaxed border-t border-emerald-500/10 pt-4">
+                            Book a short discovery consultation. We'll inspect your current repository or product requirements, identify the immediate deployment or development bottleneck, and propose a clear, fixed-scope sprint with concrete deliverables.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 9. SECTION 8 — PRACTICAL ENGINEERING WALKTHROUGHS & LAB NOTES (Matches 3-Card Blog Section in Reference) -->
+    <section id="insights" class="py-24 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <span class="inline-block px-3.5 py-1 rounded-full text-xs font-mono uppercase tracking-widest text-neon-400 section-badge mb-4">
+                    SHOW WHAT WE KNOW BY DEMONSTRATING WHAT WE DO
+                </span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mb-4">
+                    Explore Practical Engineering Walkthroughs
+                </h2>
+                <p class="text-slate-400 text-base leading-relaxed">
+                    Instead of generic corporate buzzwords, we document real deployment architectures, troubleshooting lessons, and DevSecOps workflows from our engineering lab.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-7">
+                <!-- Walkthrough Card 1 -->
+                <article class="glass-card rounded-3xl overflow-hidden flex flex-col justify-between group">
+                    <div>
+                        <!-- Stylized Engineering Graphic Thumbnail -->
+                        <div class="h-48 bg-gradient-to-br from-emerald-950 via-obsidian-900 to-obsidian-950 border-b border-emerald-500/20 p-5 flex flex-col justify-between relative overflow-hidden">
+                            <div class="flex items-center justify-between text-[10px] font-mono text-neon-400">
+                                <span>LAB WALKTHROUGH #01</span>
+                                <span>DOCKER + NGINX</span>
+                            </div>
+                            <div class="my-auto p-3 rounded-xl bg-obsidian-950/90 border border-emerald-500/25 font-mono text-[11px] text-slate-300">
+                                <div class="text-neon-400">$ docker compose up -d</div>
+                                <div class="text-slate-400">&rarr; Container app_webStarted</div>
+                                <div class="text-emerald-300">&rarr; Nginx SSL 443 Active</div>
+                            </div>
+                            <div class="text-[11px] text-slate-400 font-mono">Architecture Demonstration</div>
+                        </div>
+                        <div class="p-6">
+                            <div class="flex items-center gap-2 text-xs font-mono text-neon-400 mb-2">
+                                <span>DevOps Demonstration</span>
+                                <span>&bull;</span>
+                                <span>6 min read</span>
+                            </div>
+                            <h3 class="text-lg font-bold text-white mb-2 group-hover:text-neon-400 transition-colors">
+                                Moving a Web Application from Localhost to Production with Docker &amp; Nginx
+                            </h3>
+                            <p class="text-xs sm:text-sm text-slate-400 leading-relaxed">
+                                How the pieces fit together when containerizing a sample web application, configuring reverse proxy routing, and resolving common permission pitfalls.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="px-6 pb-6">
+                        <button onclick="openArticleModal(0)" class="text-xs font-mono font-bold text-neon-400 hover:text-neon-300 flex items-center gap-1.5">
+                            <span>Inspect Walkthrough</span>
+                            <span>&rarr;</span>
+                        </button>
+                    </div>
+                </article>
+
+                <!-- Walkthrough Card 2 -->
+                <article class="glass-card rounded-3xl overflow-hidden flex flex-col justify-between group">
+                    <div>
+                        <div class="h-48 bg-gradient-to-br from-emerald-950 via-obsidian-900 to-obsidian-950 border-b border-emerald-500/20 p-5 flex flex-col justify-between relative overflow-hidden">
+                            <div class="flex items-center justify-between text-[10px] font-mono text-neon-400">
+                                <span>LAB WALKTHROUGH #02</span>
+                                <span>DEVSECOPS CI/CD</span>
+                            </div>
+                            <div class="my-auto p-3 rounded-xl bg-obsidian-950/90 border border-emerald-500/25 font-mono text-[11px] text-slate-300">
+                                <div class="text-neon-400">$ trivy image c28/web:latest</div>
+                                <div class="text-slate-400">&rarr; Total: 0 (CRITICAL: 0)</div>
+                                <div class="text-emerald-300">&rarr; Secrets Vault Verified</div>
+                            </div>
+                            <div class="text-[11px] text-slate-400 font-mono">Pipeline Security Gate</div>
+                        </div>
+                        <div class="p-6">
+                            <div class="flex items-center gap-2 text-xs font-mono text-neon-400 mb-2">
+                                <span>DevSecOps Practice</span>
+                                <span>&bull;</span>
+                                <span>5 min read</span>
+                            </div>
+                            <h3 class="text-lg font-bold text-white mb-2 group-hover:text-neon-400 transition-colors">
+                                Where Security Checks Fit Inside an Automated GitHub Actions Pipeline
+                            </h3>
+                            <p class="text-xs sm:text-sm text-slate-400 leading-relaxed">
+                                Why storing API keys in repositories is dangerous, how to separate dev and production secrets, and how automated image scanning catches CVEs early.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="px-6 pb-6">
+                        <button onclick="openArticleModal(1)" class="text-xs font-mono font-bold text-neon-400 hover:text-neon-300 flex items-center gap-1.5">
+                            <span>Inspect Walkthrough</span>
+                            <span>&rarr;</span>
+                        </button>
+                    </div>
+                </article>
+
+                <!-- Walkthrough Card 3 -->
+                <article class="glass-card rounded-3xl overflow-hidden flex flex-col justify-between group">
+                    <div>
+                        <div class="h-48 bg-gradient-to-br from-emerald-950 via-obsidian-900 to-obsidian-950 border-b border-emerald-500/20 p-5 flex flex-col justify-between relative overflow-hidden">
+                            <div class="flex items-center justify-between text-[10px] font-mono text-neon-400">
+                                <span>LAB WALKTHROUGH #03</span>
+                                <span>WEB + CLOUD BRIDGE</span>
+                            </div>
+                            <div class="my-auto p-3 rounded-xl bg-obsidian-950/90 border border-emerald-500/25 font-mono text-[11px] text-slate-300">
+                                <div class="text-neon-400">App Code &harr; Cloud Infra</div>
+                                <div class="text-slate-400">&rarr; Structured Laravel/Node API</div>
+                                <div class="text-emerald-300">&rarr; Zero-Downtime Release</div>
+                            </div>
+                            <div class="text-[11px] text-slate-400 font-mono">Engineering Perspective</div>
+                        </div>
+                        <div class="p-6">
+                            <div class="flex items-center gap-2 text-xs font-mono text-neon-400 mb-2">
+                                <span>Founder &amp; Dev Insights</span>
+                                <span>&bull;</span>
+                                <span>4 min read</span>
+                            </div>
+                            <h3 class="text-lg font-bold text-white mb-2 group-hover:text-neon-400 transition-colors">
+                                What Building Web Applications Taught Us About Reliable Deployment
+                            </h3>
+                            <p class="text-xs sm:text-sm text-slate-400 leading-relaxed">
+                                Why connecting software development and cloud engineering solves the biggest operational headaches for small SaaS teams and startup founders.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="px-6 pb-6">
+                        <button onclick="openArticleModal(2)" class="text-xs font-mono font-bold text-neon-400 hover:text-neon-300 flex items-center gap-1.5">
+                            <span>Inspect Walkthrough</span>
+                            <span>&rarr;</span>
+                        </button>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- 10. BOTTOM CTA BANNER + GIANT WATERMARK FOOTER (Matches SynthChat Reference Bottom) -->
+    <section class="py-16 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-6xl mx-auto rounded-3xl p-10 sm:p-14 text-center relative overflow-hidden border border-neon-400/40 bg-gradient-to-b from-emerald-900/40 via-obsidian-900 to-obsidian-950 shadow-[0_0_70px_-15px_rgba(34,197,94,0.3)]">
+            <div class="pointer-events-none absolute -top-24 left-1/2 -translate-x-1/2 w-[520px] h-56 bg-neon-400/25 blur-3xl rounded-full"></div>
+            <div class="relative z-10 max-w-2xl mx-auto">
+                <span class="inline-block px-3.5 py-1 rounded-full text-xs font-mono uppercase tracking-widest text-neon-400 section-badge mb-5">
+                    C28 — SOFTWARE &amp; CLOUD ENGINEERING
+                </span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mb-4">
+                    Unlock Reliable Deployments &amp; Scalable Product Engineering
+                </h2>
+                <p class="text-slate-300 text-sm sm:text-base mb-8 leading-relaxed">
+                    Ready to deploy your application, automate your CI/CD pipeline, or build your next digital product with security baked in? Let's scope your project.
+                </p>
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                    <button onclick="openModal('Bottom CTA Consultation')" class="btn-emerald text-obsidian-950 font-bold text-sm px-8 py-4 rounded-full">
+                        Book a Consultation
+                    </button>
+                    <a href="#blueprint" class="px-6 py-4 rounded-full text-xs sm:text-sm font-mono text-slate-300 hover:text-white border border-emerald-500/30 bg-obsidian-950/60 transition">
+                        Review 10-Step Blueprint
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer with Giant Cropped Watermark Text -->
+    <footer class="pt-16 bg-obsidian-950 border-t border-emerald-500/15 relative overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-8 pb-14 border-b border-emerald-500/10">
+                <div class="col-span-2">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-8 h-8 rounded-lg btn-emerald flex items-center justify-center text-obsidian-950 font-extrabold text-xs">
+                            C28
+                        </div>
+                        <span class="text-white font-bold text-lg tracking-tight">C28 Studios</span>
+                    </div>
+                    <p class="text-xs sm:text-sm text-slate-400 max-w-sm leading-relaxed mb-5">
+                        We build digital products and help teams deploy, secure, and operate them reliably. Software &amp; Cloud Engineering for startups, SaaS teams, and modern businesses.
+                    </p>
+                    <div class="text-xs font-mono text-neon-400">
+                        &#9679; Accepting new DevOps &amp; Software Sprints
+                    </div>
+                </div>
+
+                <div>
+                    <h4 class="text-xs font-mono uppercase tracking-wider text-white mb-4">Core Services</h4>
+                    <ul class="space-y-2.5 text-xs text-slate-400">
+                        <li><a href="#services" class="hover:text-neon-400 transition">DevOps &amp; Cloud</a></li>
+                        <li><a href="#services" class="hover:text-neon-400 transition">DevSecOps Pipelines</a></li>
+                        <li><a href="#services" class="hover:text-neon-400 transition">Software Development</a></li>
+                        <li><a href="#services" class="hover:text-neon-400 transition">Website Development</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="text-xs font-mono uppercase tracking-wider text-white mb-4">Architecture</h4>
+                    <ul class="space-y-2.5 text-xs text-slate-400">
+                        <li><a href="#blueprint" class="hover:text-neon-400 transition">10-Step Blueprint</a></li>
+                        <li><a href="#capabilities" class="hover:text-neon-400 transition">Docker &amp; Nginx</a></li>
+                        <li><a href="#capabilities" class="hover:text-neon-400 transition">GitHub Actions CI/CD</a></li>
+                        <li><a href="#insights" class="hover:text-neon-400 transition">Engineering Lab Notes</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="text-xs font-mono uppercase tracking-wider text-white mb-4">Connect</h4>
+                    <ul class="space-y-2.5 text-xs text-slate-400">
+                        <li><button onclick="openModal('Footer Consultation')" class="hover:text-neon-400 transition">Book a Consultation</button></li>
+                        <li><button onclick="openModal('Request a Quote')" class="hover:text-neon-400 transition">Request a Quote</button></li>
+                        <li><a href="#faq" class="hover:text-neon-400 transition">Founder FAQ</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="py-6 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500">
+                <p>&copy; 2026 C28 — Software &amp; Cloud Engineering. All rights reserved.</p>
+                <p class="mt-2 sm:mt-0 font-mono">Built for reliability from localhost to production.</p>
+            </div>
+        </div>
+
+        <!-- Giant Bottom-Cropped Brand Wordmark (Matches "SynthChat" Footer Watermark in Reference) -->
+        <div class="select-none pointer-events-none text-center overflow-hidden leading-none pt-2 -mb-6 sm:-mb-10">
+            <span class="text-[18vw] font-extrabold tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-emerald-500/20 via-emerald-500/5 to-transparent">
+                C28Studios
+            </span>
+        </div>
+    </footer>
+
+    <!-- INTERACTIVE CONSULTATION / QUOTE MODAL -->
+    <div id="consultationModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-obsidian-950/80 backdrop-blur-md">
+        <div class="glass-card rounded-3xl max-w-lg w-full p-6 sm:p-8 border border-neon-400/40 shadow-2xl relative">
+            <button onclick="closeModal()" class="absolute top-5 right-5 text-slate-400 hover:text-white text-xl font-mono">&times;</button>
+            <span id="modalBadge" class="inline-block px-3 py-1 rounded-full text-[11px] font-mono uppercase tracking-widest text-neon-400 section-badge mb-3">
+                C28 ENGINEERING INQUIRY
+            </span>
+            <h3 class="text-2xl font-extrabold text-white mb-2">Scope Your Project With C28</h3>
+            <p class="text-xs sm:text-sm text-slate-300 mb-6">
+                Tell us which service you need and where your project stands today. You'll work directly with our engineering team.
+            </p>
+
+            <form id="modalForm" onsubmit="submitConsultation(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-mono uppercase text-slate-300 mb-1.5">Your Name &amp; Role</label>
+                    <input type="text" required placeholder="e.g. Alex Rivera — SaaS Founder" class="w-full px-4 py-2.5 rounded-xl bg-obsidian-950 border border-emerald-500/25 text-sm text-white focus:outline-none focus:border-neon-400">
+                </div>
+                <div>
+                    <label class="block text-xs font-mono uppercase text-slate-300 mb-1.5">Work Email</label>
+                    <input id="modalEmailInput" type="email" required placeholder="founder@company.com" class="w-full px-4 py-2.5 rounded-xl bg-obsidian-950 border border-emerald-500/25 text-sm text-white focus:outline-none focus:border-neon-400">
+                </div>
+                <div>
+                    <label class="block text-xs font-mono uppercase text-slate-300 mb-1.5">Primary Engineering Need</label>
+                    <select id="modalServiceSelect" class="w-full px-4 py-2.5 rounded-xl bg-obsidian-950 border border-emerald-500/25 text-sm text-white focus:outline-none focus:border-neon-400">
+                        <option value="DevOps & Cloud Engineering">DevOps &amp; Cloud Engineering (CI/CD, Docker, Server Setup)</option>
+                        <option value="DevSecOps Integration">DevSecOps (Vulnerability Scanning, Secret Management)</option>
+                        <option value="Software Development">Software Development (SaaS, Web App, API, Dashboard)</option>
+                        <option value="Website Development">Website Development (Landing Page, Business Site, SEO)</option>
+                        <option value="Full Studio Package">Connected Build + Deploy + Operate Package</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-mono uppercase text-slate-300 mb-1.5">Project or Repository Context</label>
+                    <textarea id="modalNotes" rows="3" placeholder="Briefly describe your application, current deployment process, or timeline..." class="w-full px-4 py-2.5 rounded-xl bg-obsidian-950 border border-emerald-500/25 text-sm text-white focus:outline-none focus:border-neon-400"></textarea>
+                </div>
+                <button type="submit" class="btn-emerald w-full py-3.5 rounded-full text-obsidian-950 font-bold text-sm">
+                    Send Engineering Request
+                </button>
+            </form>
+
+            <div id="modalSuccess" class="hidden text-center py-6 space-y-3">
+                <div class="w-12 h-12 rounded-full bg-emerald-500/20 border border-neon-400 text-neon-400 flex items-center justify-center mx-auto text-xl font-bold">
+                    &#10003;
+                </div>
+                <h4 class="text-lg font-bold text-white">Inquiry Received by C28</h4>
+                <p class="text-xs sm:text-sm text-slate-300 max-w-sm mx-auto">
+                    Thank you! We've logged your architectural requirements and will reply within 1 business day with concrete next steps.
+                </p>
+                <button onclick="closeModal()" class="mt-2 px-6 py-2 rounded-full text-xs font-mono bg-white/10 text-white hover:bg-white/20">
+                    Return to C28
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- WALKTHROUGH READER MODAL -->
+    <div id="articleModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-obsidian-950/85 backdrop-blur-md">
+        <div class="glass-card rounded-3xl max-w-2xl w-full p-6 sm:p-8 border border-neon-400/40 shadow-2xl relative max-h-[85vh] overflow-y-auto">
+            <button onclick="closeArticleModal()" class=" top-5 right-5 float-right text-slate-400 hover:text-white text-xl font-mono">&times;</button>
+            <div id="articleModalTag" class="text-xs font-mono text-neon-400 uppercase tracking-widest mb-2">LAB WALKTHROUGH</div>
+            <h3 id="articleModalTitle" class="text-2xl font-extrabold text-white mb-4"></h3>
+            <div id="articleModalBody" class="space-y-4 text-sm text-slate-300 leading-relaxed"></div>
+            <div class="mt-8 pt-4 border-t border-emerald-500/20 flex items-center justify-between">
+                <span class="text-xs text-slate-400">Want this implemented for your team's repository?</span>
+                <button onclick="closeArticleModal(); openModal('Walkthrough Implementation')" class="btn-emerald text-obsidian-950 font-bold text-xs px-5 py-2.5 rounded-full">
+                    Book Implementation &rarr;
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 1. HERO CONSOLE TAB SWITCHER
+        const consoleData = {
+            pipeline: {
+                logs: [
+                    '<div><span class="text-neon-400">[12:04:01]</span> Triggered workflow: <span class="text-white">Deploy SaaS Production</span></div>',
+                    '<div><span class="text-neon-400">[12:04:04]</span> Building multi-stage Docker image <span class="text-emerald-300">c28/saas-app:sha-94f2a</span></div>',
+                    '<div><span class="text-neon-400">[12:04:12]</span> Running automated unit &amp; integration test suite... <span class="text-neon-400">PASSED</span></div>',
+                    '<div><span class="text-neon-400">[12:04:16]</span> Pushing verified artifact to private container registry... <span class="text-neon-400">OK</span></div>',
+                    '<div><span class="text-neon-400">[12:04:19]</span> Executing zero-downtime container rollout... <span class="text-neon-400">LIVE</span></div>'
+                ],
+                outcome: "Instead of manually logging into servers and hoping nothing breaks, your team pushes code to GitHub and C28's automated pipeline builds, scans, and releases your application reliably."
+            },
+            devsecops: {
+                logs: [
+                    '<div><span class="text-neon-400">[SEC-01]</span> Scanning repository for hardcoded API keys &amp; tokens... <span class="text-neon-400">0 LEAKS</span></div>',
+                    '<div><span class="text-neon-400">[SEC-02]</span> Auditing composer.lock / package-lock.json dependencies... <span class="text-neon-400">CLEAN</span></div>',
+                    '<div><span class="text-neon-400">[SEC-03]</span> Trivy container image scan (OS + library layers)... <span class="text-neon-400">0 CRITICAL</span></div>',
+                    '<div><span class="text-neon-400">[SEC-04]</span> Verifying production secrets isolated from staging... <span class="text-neon-400">VERIFIED</span></div>',
+                    '<div><span class="text-neon-400">[SEC-05]</span> Security gate approved deployment to production node.</div>'
+                ],
+                outcome: "We integrate practical security checks directly into your delivery pipeline—protecting customer data, preventing leaked credentials, and catching vulnerabilities before code goes live."
+            },
+            nginx: {
+                logs: [
+                    '<div><span class="text-neon-400">[INFRA-01]</span> Provisioning hardened Ubuntu LTS production host... <span class="text-neon-400">READY</span></div>',
+                    '<div><span class="text-neon-400">[INFRA-02]</span> Configuring Nginx upstream proxy &amp; gzip/brotli compression... <span class="text-neon-400">OK</span></div>',
+                    '<div><span class="text-neon-400">[INFRA-03]</span> Issuing &amp; auto-renewing Let\'s Encrypt TLS 1.3 certificates... <span class="text-neon-400">HTTPS ACTIVE</span></div>',
+                    '<div><span class="text-neon-400">[INFRA-04]</span> Applying UFW firewall rules &amp; non-root container execution... <span class="text-neon-400">LOCKED</span></div>',
+                    '<div><span class="text-neon-400">[INFRA-05]</span> Linux disk, memory, and endpoint health monitor online.</div>'
+                ],
+                outcome: "Your application runs on a properly configured Linux server with Nginx reverse proxy routing, automated SSL/HTTPS renewals, and proactive resource monitoring."
+            },
+            software: {
+                logs: [
+                    '<div><span class="text-neon-400">[APP-01]</span> Architecting multi-tenant SaaS backend &amp; REST/GraphQL API... <span class="text-neon-400">OK</span></div>',
+                    '<div><span class="text-neon-400">[APP-02]</span> Configuring database migrations, queues &amp; Redis caching... <span class="text-neon-400">READY</span></div>',
+                    '<div><span class="text-neon-400">[APP-03]</span> Building responsive customer dashboard &amp; conversion UI... <span class="text-neon-400">DONE</span></div>',
+                    '<div><span class="text-neon-400">[APP-04]</span> Connecting application telemetry &amp; structured error logging... <span class="text-neon-400">ACTIVE</span></div>',
+                    '<div><span class="text-neon-400">[APP-05]</span> Full-stack application packaged for one-click cloud deploy.</div>'
+                ],
+                outcome: "Because C28 combines web application development with cloud infrastructure engineering, the software we build is designed from day one to run smoothly in production."
+            }
+        };
+
+        function switchConsoleTab(tabKey) {
+            const buttons = document.querySelectorAll('.console-tab-btn');
+            buttons.forEach(btn => {
+                if (btn.dataset.tab === tabKey) {
+                    btn.className = "console-tab-btn w-full text-left px-3 py-2.5 rounded-lg text-xs font-medium flex items-center justify-between bg-emerald-500/15 text-neon-400 border border-emerald-500/30";
+                } else {
+                    btn.className = "console-tab-btn w-full text-left px-3 py-2.5 rounded-lg text-xs font-medium flex items-center justify-between text-slate-400 hover:text-white hover:bg-white/5 border border-transparent";
+                }
+            });
+
+            document.getElementById('consoleTerminalLogs').innerHTML = consoleData[tabKey].logs.join('');
+            document.getElementById('consoleOutcomeDescription').textContent = consoleData[tabKey].outcome;
+        }
+
+        function triggerConsoleDeploy() {
+            const badge = document.getElementById('consoleStatusBadge');
+            badge.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-ping"></span> RUNNING CI/CD &amp; SECURITY SCAN...';
+            setTimeout(() => {
+                badge.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-neon-400 animate-ping"></span> DEPLOYED SHA-88C1F • 0 DOWNTIME';
+            }, 900);
+        }
+
+        // 2. BENTO CODE SNIPPET SWITCHER
+        const codeSnippets = [
+            {
+                title: '.github/workflows/deploy-production.yml',
+                code: `<span class="text-slate-500"># Automated C28 Production Pipeline + Security Gate</span>
+<span class="text-neon-400">name:</span> Build, Scan &amp; Deploy SaaS
+<span class="text-neon-400">on:</span>
+  <span class="text-neon-400">push:</span>
+    <span class="text-neon-400">branches:</span> [ <span class="text-amber-300">"main"</span> ]
+
+<span class="text-neon-400">jobs:</span>
+  <span class="text-neon-400">secure-deploy:</span>
+    <span class="text-neon-400">runs-on:</span> ubuntu-latest
+    <span class="text-neon-400">steps:</span>
+      - <span class="text-neon-400">uses:</span> actions/checkout@v4
+      - <span class="text-neon-400">name:</span> Build Production Docker Image
+        <span class="text-neon-400">run:</span> docker build -t c28-app:\${{ github.sha }} .
+      - <span class="text-neon-400">name:</span> DevSecOps Vulnerability &amp; Secret Scan
+        <span class="text-neon-400">run:</span> trivy image --exit-code 1 --severity CRITICAL c28-app:\${{ github.sha }}
+      - <span class="text-neon-400">name:</span> Rollout to Production Server via SSH
+        <span class="text-neon-400">run:</span> ./scripts/zero-downtime-swap.sh`
+            },
+            {
+                title: 'Dockerfile.production',
+                code: `<span class="text-slate-500"># Multi-Stage Hardened Production Container</span>
+<span class="text-neon-400">FROM</span> node:20-alpine <span class="text-neon-400">AS</span> builder
+<span class="text-neon-400">WORKDIR</span> /app
+<span class="text-neon-400">COPY</span> package*.json ./
+<span class="text-neon-400">RUN</span> npm ci --only=production
+<span class="text-neon-400">COPY</span> . .
+<span class="text-neon-400">RUN</span> npm run build
+
+<span class="text-neon-400">FROM</span> node:20-alpine <span class="text-neon-400">AS</span> runner
+<span class="text-neon-400">RUN</span> addgroup -S c28group &amp;&amp; adduser -S c28user -G c28group
+<span class="text-neon-400">WORKDIR</span> /app
+<span class="text-neon-400">COPY</span> --from=builder /app/dist ./dist
+<span class="text-neon-400">USER</span> c28user
+<span class="text-neon-400">EXPOSE</span> 8080
+<span class="text-neon-400">CMD</span> ["node", "dist/server.js"]`
+            },
+            {
+                title: '/etc/nginx/conf.d/c28-app.conf',
+                code: `<span class="text-slate-500"># Hardened Nginx Reverse Proxy + TLS 1.3</span>
+<span class="text-neon-400">upstream</span> c28_backend {
+    server 127.0.0.1:8080 keepalive=32;
+}
+
+<span class="text-neon-400">server</span> {
+    listen 443 ssl http2;
+    server_name app.clientdomain.com;
+
+    ssl_protocols TLSv1.2 TLSv1.3;
+    add_header Strict-Transport-Security "max-age=63072000" always;
+    add_header X-Frame-Options "SAMEORIGIN";
+
+    location / {
+        proxy_pass http://c28_backend;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}`
+            }
+        ];
+
+        let currentSnippetIndex = 0;
+        function setSnippet(idx) {
+            currentSnippetIndex = idx;
+            document.getElementById('codeFileTitle').textContent = codeSnippets[idx].title;
+            document.getElementById('codeBlockContent').innerHTML = `<code>${codeSnippets[idx].code}</code>`;
+            const btns = document.querySelectorAll('.snippet-btn');
+            btns.forEach((b, i) => {
+                b.className = i === idx
+                    ? "snippet-btn text-[11px] font-mono px-2.5 py-1 rounded bg-emerald-500/20 text-neon-400 border border-emerald-500/30"
+                    : "snippet-btn text-[11px] font-mono px-2.5 py-1 rounded text-slate-400 hover:text-white";
+            });
+        }
+        function cycleCodeSnippet() {
+            setSnippet((currentSnippetIndex + 1) % codeSnippets.length);
+        }
+
+        // 3. 10-STEP PRODUCTION BLUEPRINT INTERACTIVE NODES
+        const blueprintSteps = [
+            {
+                step: "01", short: "1. Web App Code", category: "APPLICATION",
+                title: "Build or Audit the Web Application",
+                deliverable: "Deliverable: Clean Application Architecture",
+                problem: "We start with your SaaS application, API, or business web app—either building it from scratch or auditing your existing codebase for production readiness.",
+                outcome: "Outcome: Application structured cleanly for environment-based configuration.",
+                cmd: "$ git status && npm run test:ci"
+            },
+            {
+                step: "02", short: "2. GitHub Repo", category: "VERSION CONTROL",
+                title: "Structure Repository & Branch Protection",
+                deliverable: "Deliverable: Protected Main & Staging Branches",
+                problem: "We organize your GitHub repository, remove any accidentally committed environment files, and enforce clean branch workflows.",
+                outcome: "Outcome: Single source of truth for both application code and infrastructure.",
+                cmd: "$ git push origin main --atomic"
+            },
+            {
+                step: "03", short: "3. Dockerize App", category: "CONTAINERIZATION",
+                title: "Containerize Application Using Docker",
+                deliverable: "Deliverable: Multi-stage Dockerfile & Compose",
+                problem: "Eliminates 'it works on my laptop, but fails on the server.' We package your web application, runtime dependencies, and web server into a deterministic container image.",
+                outcome: "Outcome: Identical behavior across local development, staging, and production Linux hosts.",
+                cmd: "$ docker compose -f docker-compose.prod.yml up -d --build"
+            },
+            {
+                step: "04", short: "4. Linux Server", category: "INFRASTRUCTURE",
+                title: "Configure & Harden Production Linux Server",
+                deliverable: "Deliverable: Hardened Cloud VM / Server",
+                problem: "We provision your cloud instance, configure SSH key-only authentication, set up UFW firewall rules, and tune system swap and file descriptors.",
+                outcome: "Outcome: Stable, locked-down Linux host ready for container workloads.",
+                cmd: "$ sudo ufw enable && sudo ufw status numbered"
+            },
+            {
+                step: "05", short: "5. Nginx & HTTPS", category: "NETWORKING & SSL",
+                title: "Set Up Nginx Reverse Proxy & Automated HTTPS",
+                deliverable: "Deliverable: Domain Routing + TLS 1.3 Certificates",
+                problem: "We connect your custom domain, configure Nginx to route traffic to your running containers, and automate SSL certificate renewal.",
+                outcome: "Outcome: Fast, encrypted HTTPS traffic with security headers enabled.",
+                cmd: "$ sudo nginx -t && sudo systemctl reload nginx"
+            },
+            {
+                step: "06", short: "6. CI/CD Pipeline", category: "AUTOMATION",
+                title: "Implement Automated CI/CD Pipeline",
+                deliverable: "Deliverable: GitHub Actions Deployment Workflow",
+                problem: "Manual deployments waste engineering time and cause human error. We automate build, test, and deployment steps whenever code is pushed to GitHub.",
+                outcome: "Outcome: Push code to GitHub and watch your release deploy automatically.",
+                cmd: "$ gh workflow run deploy-production.yml"
+            },
+            {
+                step: "07", short: "7. DevSecOps", category: "SECURITY",
+                title: "Integrate DevSecOps Scanning & Secret Management",
+                deliverable: "Deliverable: Automated Vulnerability & Secret Checks",
+                problem: "We add dependency auditing, container image vulnerability scanning, and encrypted runtime secrets so credentials never sit in plain text.",
+                outcome: "Outcome: Vulnerable builds are caught before reaching production.",
+                cmd: "$ trivy image --severity HIGH,CRITICAL c28/app:latest"
+            },
+            {
+                step: "08", short: "8. Monitoring", category: "OBSERVABILITY",
+                title: "Configure Uptime, Log & Resource Monitoring",
+                deliverable: "Deliverable: Health Checks & Alerting",
+                problem: "You shouldn't find out your site is down from an angry customer. We monitor endpoint availability, container health, and Linux disk/CPU usage.",
+                outcome: "Outcome: Immediate visibility and alerts before small issues become outages.",
+                cmd: "$ curl -fsS https://app.yourdomain.com/healthz"
+            },
+            {
+                step: "09", short: "9. Documentation", category: "KNOWLEDGE HANDOFF",
+                title: "Document Architecture & Operational Runbooks",
+                deliverable: "Deliverable: Architecture Diagram & Runbook",
+                problem: "We document how your server, containers, secrets, and CI/CD pipeline work so your team is never locked into a black box.",
+                outcome: "Outcome: Any developer on your team can understand and operate the system.",
+                cmd: "$ cat docs/PRODUCTION-ARCHITECTURE.md"
+            },
+            {
+                step: "10", short: "10. Live Ops", category: "PRODUCTION SCALE",
+                title: "Operate, Optimize & Scale Reliably",
+                deliverable: "Deliverable: Reliable Production Operations",
+                problem: "With the foundation live, we support ongoing releases, cloud cost optimization, and performance tuning as your user base grows.",
+                outcome: "Outcome: Peace of mind so founders can focus on building product value.",
+                cmd: "$ docker stats --no-stream"
+            }
+        ];
+
+        function renderBlueprintNodes(activeIndex = 2) {
+            const container = document.getElementById('blueprintNodes');
+            container.innerHTML = blueprintSteps.map((item, idx) => {
+                const isActive = idx === activeIndex;
+                return `
+                    <button onclick="selectBlueprintStep(${idx})" class="px-3 py-2.5 rounded-xl text-left font-mono text-xs transition-all border ${
+                        isActive
+                            ? 'btn-emerald text-obsidian-950 font-bold border-neon-400 shadow-lg'
+                            : 'bg-obsidian-950/85 text-slate-300 border-emerald-500/20 hover:border-neon-400/50 hover:text-white'
+                    }">
+                        <div class="text-[10px] opacity-75">STEP ${item.step}</div>
+                        <div class="truncate">${item.short.split('. ')[1]}</div>
+                    </button>
+                `;
+            }).join('');
+
+            const s = blueprintSteps[activeIndex];
+            document.getElementById('bpStepNumber').textContent = `STEP ${s.step} OF 10 • ${s.category}`;
+            document.getElementById('bpStepTitle').textContent = s.title;
+            document.getElementById('bpStepDeliverable').textContent = s.deliverable;
+            document.getElementById('bpStepProblem').textContent = s.problem;
+            document.getElementById('bpStepOutcome').innerHTML = `&#10003; ${s.outcome}`;
+            document.getElementById('bpStepCommand').textContent = s.cmd;
+        }
+
+        function selectBlueprintStep(idx) {
+            renderBlueprintNodes(idx);
+        }
+
+        // 4. PRICING MODE TOGGLE
+        function setPricingMode(mode) {
+            const btnSprint = document.getElementById('btnModeSprint');
+            const btnRetainer = document.getElementById('btnModeRetainer');
+            if (mode === 'sprint') {
+                btnSprint.className = "px-5 py-2 rounded-full text-xs font-bold transition-all btn-emerald text-obsidian-950";
+                btnRetainer.className = "px-5 py-2 rounded-full text-xs font-semibold text-slate-400 hover:text-white transition-all";
+                document.getElementById('priceCard1').textContent = "$1,200";
+                document.getElementById('unitCard1').textContent = "/ typical sprint";
+                document.getElementById('priceCard2').textContent = "$2,500";
+                document.getElementById('unitCard2').textContent = "/ typical sprint";
+                document.getElementById('priceCard3').textContent = "$4,200+";
+                document.getElementById('unitCard3').textContent = "/ custom build";
+            } else {
+                btnRetainer.className = "px-5 py-2 rounded-full text-xs font-bold transition-all btn-emerald text-obsidian-950";
+                btnSprint.className = "px-5 py-2 rounded-full text-xs font-semibold text-slate-400 hover:text-white transition-all";
+                document.getElementById('priceCard1').textContent = "$750";
+                document.getElementById('unitCard1').textContent = "/ month maintenance";
+                document.getElementById('priceCard2').textContent = "$1,600";
+                document.getElementById('unitCard2').textContent = "/ month DevOps partner";
+                document.getElementById('priceCard3').textContent = "$3,200";
+                document.getElementById('unitCard3').textContent = "/ month dedicated studio";
+            }
+        }
+
+        // 5. FAQ ACCORDION
+        function toggleFaq(index) {
+            for (let i = 0; i < 5; i++) {
+                const body = document.getElementById(`faqBody${i}`);
+                const icon = document.getElementById(`faqIcon${i}`);
+                if (i === index) {
+                    const isHidden = body.classList.contains('hidden');
+                    body.classList.toggle('hidden');
+                    icon.innerHTML = isHidden ? '&minus;' : '+';
+                } else {
+                    body.classList.add('hidden');
+                    icon.innerHTML = '+';
+                }
+            }
+        }
+
+        // 6. CONSULTATION MODAL
+        function openModal(contextLabel) {
+            const modal = document.getElementById('consultationModal');
+            document.getElementById('modalBadge').textContent = `C28 • ${contextLabel.toUpperCase()}`;
+            document.getElementById('modalForm').classList.remove('hidden');
+            document.getElementById('modalSuccess').classList.add('hidden');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('consultationModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        function handleHeroSubmit(e) {
+            e.preventDefault();
+            const val = document.getElementById('heroRepoInput').value.trim();
+            openModal('Hero Quote Request');
+            if (val.includes('@')) {
+                document.getElementById('modalEmailInput').value = val;
+            } else if (val.length > 0) {
+                document.getElementById('modalNotes').value = `Repository / Project URL: ${val}`;
+            }
+        }
+
+        function submitConsultation(e) {
+            e.preventDefault();
+            document.getElementById('modalForm').classList.add('hidden');
+            document.getElementById('modalSuccess').classList.remove('hidden');
+        }
+
+        // 7. WALKTHROUGH READER MODAL
+        const articles = [
+            {
+                tag: "LAB WALKTHROUGH #01 • DOCKER & NGINX",
+                title: "Moving a Web Application from Localhost to Production with Docker & Nginx",
+                body: `
+                    <p>One of the most common hurdles developers and startup founders hit happens right after the application code is finished: moving the app from a local development machine onto a live Linux server reliably.</p>
+                    <p><strong class="text-white">1. Containerizing the Runtime:</strong> Instead of installing PHP, Node, or Python versions directly on the host OS, we package the application inside a multi-stage Dockerfile so the exact same dependencies run everywhere.</p>
+                    <p><strong class="text-white">2. Nginx Reverse Proxy &amp; HTTPS:</strong> We place Nginx in front of the container to handle incoming traffic, compress static assets, and terminate TLS 1.3 SSL certificates via Let's Encrypt.</p>
+                    <p><strong class="text-white">3. The Result:</strong> Predictable releases that don't break when server packages update, backed by a clean docker-compose production definition.</p>
+                `
+            },
+            {
+                tag: "LAB WALKTHROUGH #02 • DEVSECOPS PIPELINES",
+                title: "Where Security Checks Fit Inside an Automated GitHub Actions Pipeline",
+                body: `
+                    <p>Security doesn't require slowing down your developers. By integrating automated checks directly into GitHub Actions, every push is verified before it reaches your production server.</p>
+                    <p><strong class="text-white">1. Eliminating Hardcoded Secrets:</strong> API keys and database credentials should never live in source code. We migrate secrets into encrypted environment vaults injected only at runtime.</p>
+                    <p><strong class="text-white">2. Dependency &amp; Image Scanning:</strong> Before a Docker image is deployed, Trivy scans both OS packages and language dependencies for known CVEs.</p>
+                    <p><strong class="text-white">3. Automated Gatekeeping:</strong> If a critical vulnerability is detected, the pipeline halts automatically—keeping your production environment safe.</p>
+                `
+            },
+            {
+                tag: "LAB WALKTHROUGH #03 • SOFTWARE + CLOUD",
+                title: "What Building Web Applications Taught Us About Reliable Deployment",
+                body: `
+                    <p>When software development and infrastructure are treated as completely separate worlds, teams end up with applications that are painful to deploy and expensive to maintain.</p>
+                    <p><strong class="text-white">1. Designing for Deployment:</strong> Experience building Laravel, Node, and SaaS applications makes it much easier to design stateless services, clean health-check endpoints, and structured logging.</p>
+                    <p><strong class="text-white">2. One Connected Partner:</strong> At C28, we bridge application development with DevOps and DevSecOps—so founders have one engineering partner accountable for both the product and the platform it runs on.</p>
+                `
+            }
+        ];
+
+        function openArticleModal(idx) {
+            const a = articles[idx];
+            document.getElementById('articleModalTag').textContent = a.tag;
+            document.getElementById('articleModalTitle').textContent = a.title;
+            document.getElementById('articleModalBody').innerHTML = a.body;
+            const modal = document.getElementById('articleModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeArticleModal() {
+            const modal = document.getElementById('articleModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        // Initialize Blueprint Nodes on Load
+        window.addEventListener('DOMContentLoaded', () => {
+            renderBlueprintNodes(2);
+        });
+    </script>
+</body>
+</html>
