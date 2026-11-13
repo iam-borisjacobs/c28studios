@@ -178,18 +178,44 @@
                 Tell us which service you need and where your project stands today. You'll work directly with our engineering studio.
             </p>
 
-            <form id="modalForm" onsubmit="window.c28SubmitModal && window.c28SubmitModal(event)" class="space-y-4">
-                <div>
-                    <label class="block text-xs font-mono uppercase text-slate-300 mb-1.5" for="modalNameInput">Your Name &amp; Role</label>
-                    <input id="modalNameInput" type="text" required placeholder="e.g. Alex Rivera — SaaS Founder" class="w-full px-4 py-2.5 rounded-xl bg-obsidian-950 border border-emerald-500/25 text-sm text-white focus:outline-none focus:border-neon-400">
+            <form id="modalForm" method="POST" action="{{ route('inquiries.store') }}" onsubmit="window.c28SubmitModal && window.c28SubmitModal(event)" class="space-y-4">
+                @csrf
+
+                <!-- Honeypot anti-spam trap -->
+                <div class="hidden" aria-hidden="true">
+                    <label for="modalWebsiteUrlInput">Website URL</label>
+                    <input id="modalWebsiteUrlInput" name="website_url" type="text" tabindex="-1" autocomplete="off" value="">
+                </div>
+
+                <div id="modalErrors" class="hidden p-3.5 rounded-xl bg-rose-500/15 border border-rose-500/40 text-xs text-rose-200 space-y-1" role="alert"></div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-mono uppercase text-slate-300 mb-1.5" for="modalNameInput">Your Name &amp; Role *</label>
+                        <input id="modalNameInput" name="name" type="text" required placeholder="e.g. Alex Rivera — SaaS Founder" class="w-full px-4 py-2.5 rounded-xl bg-obsidian-950 border border-emerald-500/25 text-sm text-white focus:outline-none focus:border-neon-400">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-mono uppercase text-slate-300 mb-1.5" for="modalEmailInput">Work Email *</label>
+                        <input id="modalEmailInput" name="email" type="email" required placeholder="founder@company.com" class="w-full px-4 py-2.5 rounded-xl bg-obsidian-950 border border-emerald-500/25 text-sm text-white focus:outline-none focus:border-neon-400">
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-mono uppercase text-slate-300 mb-1.5" for="modalCompanyInput">Company / Project</label>
+                        <input id="modalCompanyInput" name="company" type="text" placeholder="Optional" class="w-full px-4 py-2.5 rounded-xl bg-obsidian-950 border border-emerald-500/25 text-sm text-white focus:outline-none focus:border-neon-400">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-mono uppercase text-slate-300 mb-1.5" for="modalEngagementMode">Engagement Mode</label>
+                        <select id="modalEngagementMode" name="engagement_mode" class="w-full px-4 py-2.5 rounded-xl bg-obsidian-950 border border-emerald-500/25 text-sm text-white focus:outline-none focus:border-neon-400">
+                            <option value="sprint_fixed">Fixed-Scope Sprint</option>
+                            <option value="monthly_retainer">Monthly Retainer</option>
+                            <option value="architecture_review">Architecture Review</option>
+                        </select>
+                    </div>
                 </div>
                 <div>
-                    <label class="block text-xs font-mono uppercase text-slate-300 mb-1.5" for="modalEmailInput">Work Email</label>
-                    <input id="modalEmailInput" type="email" required placeholder="founder@company.com" class="w-full px-4 py-2.5 rounded-xl bg-obsidian-950 border border-emerald-500/25 text-sm text-white focus:outline-none focus:border-neon-400">
-                </div>
-                <div>
-                    <label class="block text-xs font-mono uppercase text-slate-300 mb-1.5" for="modalServiceSelect">Primary Engineering Need</label>
-                    <select id="modalServiceSelect" class="w-full px-4 py-2.5 rounded-xl bg-obsidian-950 border border-emerald-500/25 text-sm text-white focus:outline-none focus:border-neon-400">
+                    <label class="block text-xs font-mono uppercase text-slate-300 mb-1.5" for="modalServiceSelect">Primary Engineering Need *</label>
+                    <select id="modalServiceSelect" name="service_interest" class="w-full px-4 py-2.5 rounded-xl bg-obsidian-950 border border-emerald-500/25 text-sm text-white focus:outline-none focus:border-neon-400">
                         <option value="DevOps & Cloud Engineering">01 • DevOps &amp; Cloud Engineering (CI/CD, Docker, Server Setup)</option>
                         <option value="DevSecOps Integration">02 • DevSecOps Integration (Vulnerability Scanning, Secret Management)</option>
                         <option value="Software Development">03 • Software Development (SaaS, Web App, API, Dashboard)</option>
@@ -197,10 +223,10 @@
                     </select>
                 </div>
                 <div>
-                    <label class="block text-xs font-mono uppercase text-slate-300 mb-1.5" for="modalNotes">Repository or Architecture Context</label>
-                    <textarea id="modalNotes" rows="3" placeholder="Briefly describe your application, current deployment process, or timeline..." class="w-full px-4 py-2.5 rounded-xl bg-obsidian-950 border border-emerald-500/25 text-sm text-white focus:outline-none focus:border-neon-400"></textarea>
+                    <label class="block text-xs font-mono uppercase text-slate-300 mb-1.5" for="modalNotes">Repository or Architecture Context *</label>
+                    <textarea id="modalNotes" name="message" rows="3" required placeholder="Briefly describe your application, current deployment process, or timeline..." class="w-full px-4 py-2.5 rounded-xl bg-obsidian-950 border border-emerald-500/25 text-sm text-white focus:outline-none focus:border-neon-400"></textarea>
                 </div>
-                <button type="submit" class="btn-emerald w-full py-3.5 rounded-full text-obsidian-950 font-bold text-sm">
+                <button id="modalSubmitBtn" type="submit" class="btn-emerald w-full py-3.5 rounded-full text-obsidian-950 font-bold text-sm">
                     Send Engineering Request
                 </button>
             </form>

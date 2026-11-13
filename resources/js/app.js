@@ -139,15 +139,38 @@ window.c28CopyCode = function (btn) {
     }, 1200);
 };
 
-window.c28OpenModal = function (contextLabel) {
+window.c28OpenModal = function (contextLabel, engagementMode = 'sprint_fixed') {
     const modal = document.getElementById('consultationModal');
     const badge = document.getElementById('modalBadge');
     const form = document.getElementById('modalForm');
     const success = document.getElementById('modalSuccess');
+    const errors = document.getElementById('modalErrors');
+    const serviceSelect = document.getElementById('modalServiceSelect');
+    const modeSelect = document.getElementById('modalEngagementMode');
+
     if (!modal) return;
 
     if (badge && contextLabel) {
         badge.textContent = `C28 • ${String(contextLabel).toUpperCase()}`;
+    }
+    if (serviceSelect && contextLabel) {
+        const normalized = String(contextLabel).toLowerCase();
+        if (normalized.includes('devsecops') || normalized.includes('security')) {
+            serviceSelect.value = 'DevSecOps Integration';
+        } else if (normalized.includes('software') || normalized.includes('saas')) {
+            serviceSelect.value = 'Software Development';
+        } else if (normalized.includes('website') || normalized.includes('web')) {
+            serviceSelect.value = 'Website Development';
+        } else {
+            serviceSelect.value = 'DevOps & Cloud Engineering';
+        }
+    }
+    if (modeSelect && engagementMode) {
+        modeSelect.value = engagementMode;
+    }
+    if (errors) {
+        errors.classList.add('hidden');
+        errors.innerHTML = '';
     }
     if (form) form.classList.remove('hidden');
     if (success) success.classList.add('hidden');
@@ -162,12 +185,79 @@ window.c28CloseModal = function () {
     modal.classList.remove('flex');
 };
 
-window.c28SubmitModal = function (event) {
+window.c28SubmitModal = async function (event) {
     event.preventDefault();
     const form = document.getElementById('modalForm');
     const success = document.getElementById('modalSuccess');
-    if (form) form.classList.add('hidden');
-    if (success) success.classList.remove('hidden');
+    const errorsBox = document.getElementById('modalErrors');
+    const submitBtn = document.getElementById('modalSubmitBtn');
+    const csrfMeta = document.querySelector('meta[name="csrf-token"]');
+
+    if (!form) return;
+
+    if (errorsBox) {
+        errorsBox.classList.add('hidden');
+        errorsBox.innerHTML = '';
+    }
+
+    const payload = {
+        name: document.getElementById('modalNameInput')?.value || '',
+        email: document.getElementById('modalEmailInput')?.value || '',
+        company: document.getElementById('modalCompanyInput')?.value || '',
+        engagement_mode: document.getElementById('modalEngagementMode')?.value || 'sprint_fixed',
+        service_interest: document.getElementById('modalServiceSelect')?.value || 'DevOps & Cloud Engineering',
+        message: document.getElementById('modalNotes')?.value || '',
+        website_url: document.getElementById('modalWebsiteUrlInput')?.value || '',
+    };
+
+    const originalLabel = submitBtn ? submitBtn.textContent : 'Send Engineering Request';
+    if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Logging Inquiry...';
+    }
+
+    try {
+        const response = await fetch(form.getAttribute('action') || '/inquiries', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': csrfMeta ? csrfMeta.getAttribute('content') : '',
+            },
+            body: JSON.stringify(payload),
+        });
+
+        const data = await response.json().catch(() => ({}));
+
+        if (response.ok) {
+            form.reset();
+            form.classList.add('hidden');
+            if (success) success.classList.remove('hidden');
+        } else if (errorsBox) {
+            const messages = [];
+            if (data.errors && typeof data.errors === 'object') {
+                Object.values(data.errors).forEach((arr) => {
+                    if (Array.isArray(arr)) messages.push(...arr);
+                });
+            } else if (data.message) {
+                messages.push(data.message);
+            } else {
+                messages.push('Unable to submit inquiry. Please check your inputs and try again.');
+            }
+            errorsBox.innerHTML = messages.map((m) => `<div>&bull; ${m}</div>`).join('');
+            errorsBox.classList.remove('hidden');
+        }
+    } catch {
+        if (errorsBox) {
+            errorsBox.innerHTML = '<div>&bull; Network error occurred. Please try again or email engineering@c28studios.com.</div>';
+            errorsBox.classList.remove('hidden');
+        }
+    } finally {
+        if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.textContent = originalLabel;
+        }
+    }
 };
 
 window.c28ToggleMobileNav = function () {

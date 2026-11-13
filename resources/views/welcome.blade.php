@@ -778,6 +778,149 @@
         </section>
     @endif
 
+    <!-- SECTION 11: ARCHITECTURE SCOPING & CONSULTATION INTAKE (#consultation) -->
+    <section id="consultation" class="py-24 relative bg-obsidian-950/85 border-t border-emerald-500/20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+                <div class="lg:col-span-5">
+                    <span class="inline-block px-3.5 py-1 rounded-full text-xs font-mono uppercase tracking-widest text-neon-400 section-badge mb-4">
+                        ARCHITECTURE SCOPING &amp; INTAKE
+                    </span>
+                    <h2 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mb-4">
+                        Scope Your Engineering Sprint Or Cloud Pipeline
+                    </h2>
+                    <p class="text-slate-300 text-sm sm:text-base leading-relaxed mb-8">
+                        Tell us about your current repository, server environment, or product roadmap. Every inquiry goes directly to our engineering studio—no sales intermediaries.
+                    </p>
+
+                    <div class="space-y-4 mb-8">
+                        <div class="glass-card rounded-2xl p-4 border border-emerald-500/20 flex items-start gap-3.5">
+                            <span class="w-7 h-7 rounded-lg bg-emerald-500/15 border border-emerald-500/30 text-neon-400 font-mono text-xs font-bold flex items-center justify-center shrink-0">01</span>
+                            <div>
+                                <div class="text-xs font-bold text-white">Repository &amp; Infrastructure Review</div>
+                                <div class="text-xs text-slate-400">We inspect your current deployment workflow, container setup, or application requirements.</div>
+                            </div>
+                        </div>
+                        <div class="glass-card rounded-2xl p-4 border border-emerald-500/20 flex items-start gap-3.5">
+                            <span class="w-7 h-7 rounded-lg bg-emerald-500/15 border border-emerald-500/30 text-neon-400 font-mono text-xs font-bold flex items-center justify-center shrink-0">02</span>
+                            <div>
+                                <div class="text-xs font-bold text-white">Fixed-Scope Sprint Proposal</div>
+                                <div class="text-xs text-slate-400">Clear deliverables, timeline, and architecture milestones within 1 business day.</div>
+                            </div>
+                        </div>
+                        <div class="glass-card rounded-2xl p-4 border border-emerald-500/20 flex items-start gap-3.5">
+                            <span class="w-7 h-7 rounded-lg bg-emerald-500/15 border border-emerald-500/30 text-neon-400 font-mono text-xs font-bold flex items-center justify-center shrink-0">03</span>
+                            <div>
+                                <div class="text-xs font-bold text-white">100% Code &amp; Cloud Ownership</div>
+                                <div class="text-xs text-slate-400">All Dockerfiles, CI/CD pipelines, Nginx configs, and source code remain in your accounts.</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="font-mono text-xs text-slate-400">
+                        Direct Studio Channel: <span class="text-neon-400">{{ $settings['contact.email'] ?? 'engineering@c28studios.com' }}</span>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-7">
+                    <div class="glass-card rounded-3xl p-6 sm:p-10 border border-neon-400/35 shadow-2xl">
+                        @if(session('inquiry_submitted'))
+                            <div class="mb-6 p-5 rounded-2xl bg-emerald-500/15 border border-neon-400 text-slate-100" role="status">
+                                <div class="flex items-center gap-2.5 text-neon-400 font-mono text-xs uppercase font-bold mb-1">
+                                    <span>&#10003;</span>
+                                    <span>INQUIRY LOGGED IN C28 PIPELINE</span>
+                                </div>
+                                <p class="text-xs sm:text-sm text-slate-200">{{ session('inquiry_submitted') }}</p>
+                            </div>
+                        @endif
+
+                        @if($errors->any())
+                            <div class="mb-6 p-4 rounded-2xl bg-rose-500/15 border border-rose-500/40 text-xs text-rose-200 space-y-1" role="alert">
+                                <div class="font-mono uppercase font-bold text-rose-400 mb-1">Please check your submission:</div>
+                                @foreach($errors->all() as $error)
+                                    <div>&bull; {{ $error }}</div>
+                                @endforeach
+                            </div>
+                        @endif
+
+                        <form method="POST" action="{{ route('inquiries.store') }}" class="space-y-4">
+                            @csrf
+
+                            <!-- Honeypot anti-spam trap -->
+                            <div class="hidden" aria-hidden="true">
+                                <label for="consultation_website_url">Website URL</label>
+                                <input type="text" id="consultation_website_url" name="website_url" tabindex="-1" autocomplete="off" value="">
+                            </div>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <label for="inquiry_name" class="block text-xs font-mono uppercase text-slate-300 mb-1.5">Your Name &amp; Role *</label>
+                                    <input id="inquiry_name" name="name" type="text" required value="{{ old('name') }}" placeholder="e.g. Alex Rivera — SaaS Founder" class="w-full px-4 py-2.5 rounded-xl bg-obsidian-950 border border-emerald-500/25 text-sm text-white focus:outline-none focus:border-neon-400">
+                                </div>
+                                <div>
+                                    <label for="inquiry_email" class="block text-xs font-mono uppercase text-slate-300 mb-1.5">Work Email *</label>
+                                    <input id="inquiry_email" name="email" type="email" required value="{{ old('email') }}" placeholder="founder@company.com" class="w-full px-4 py-2.5 rounded-xl bg-obsidian-950 border border-emerald-500/25 text-sm text-white focus:outline-none focus:border-neon-400">
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <label for="inquiry_company" class="block text-xs font-mono uppercase text-slate-300 mb-1.5">Company / Project Name</label>
+                                    <input id="inquiry_company" name="company" type="text" value="{{ old('company') }}" placeholder="Acme Cloud Inc." class="w-full px-4 py-2.5 rounded-xl bg-obsidian-950 border border-emerald-500/25 text-sm text-white focus:outline-none focus:border-neon-400">
+                                </div>
+                                <div>
+                                    <label for="inquiry_service_interest" class="block text-xs font-mono uppercase text-slate-300 mb-1.5">Primary Engineering Service *</label>
+                                    <select id="inquiry_service_interest" name="service_interest" required class="w-full px-4 py-2.5 rounded-xl bg-obsidian-950 border border-emerald-500/25 text-sm text-white focus:outline-none focus:border-neon-400">
+                                        <option value="DevOps & Cloud Engineering" @selected(old('service_interest') === 'DevOps & Cloud Engineering')>01 • DevOps &amp; Cloud Engineering</option>
+                                        <option value="DevSecOps Integration" @selected(old('service_interest') === 'DevSecOps Integration')>02 • DevSecOps Integration</option>
+                                        <option value="Software Development" @selected(old('service_interest') === 'Software Development')>03 • Software Development</option>
+                                        <option value="Website Development" @selected(old('service_interest') === 'Website Development')>04 • Website Development</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                                <div>
+                                    <label for="inquiry_engagement_mode" class="block text-xs font-mono uppercase text-slate-300 mb-1.5">Engagement Model</label>
+                                    <select id="inquiry_engagement_mode" name="engagement_mode" class="w-full px-4 py-2.5 rounded-xl bg-obsidian-950 border border-emerald-500/25 text-sm text-white focus:outline-none focus:border-neon-400">
+                                        <option value="sprint_fixed" @selected(old('engagement_mode', 'sprint_fixed') === 'sprint_fixed')>Fixed-Scope Sprint</option>
+                                        <option value="monthly_retainer" @selected(old('engagement_mode') === 'monthly_retainer')>Monthly Retainer</option>
+                                        <option value="architecture_review" @selected(old('engagement_mode') === 'architecture_review')>Architecture Review</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label for="inquiry_budget_range" class="block text-xs font-mono uppercase text-slate-300 mb-1.5">Target Budget</label>
+                                    <select id="inquiry_budget_range" name="budget_range" class="w-full px-4 py-2.5 rounded-xl bg-obsidian-950 border border-emerald-500/25 text-sm text-white focus:outline-none focus:border-neon-400">
+                                        <option value="$1,200 – $2,500">$1,200 – $2,500 (Launch / Pipeline Sprint)</option>
+                                        <option value="$2,500 – $5,000">$2,500 – $5,000 (Full Stack / Cloud Overhaul)</option>
+                                        <option value="Monthly Retainer ($750 – $3,200/mo)">Monthly Retainer ($750 – $3,200/mo)</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label for="inquiry_timeline" class="block text-xs font-mono uppercase text-slate-300 mb-1.5">Target Timeline</label>
+                                    <select id="inquiry_timeline" name="timeline" class="w-full px-4 py-2.5 rounded-xl bg-obsidian-950 border border-emerald-500/25 text-sm text-white focus:outline-none focus:border-neon-400">
+                                        <option value="Immediate (Within 1–2 Weeks)">Immediate (1–2 Weeks)</option>
+                                        <option value="This Month">This Month</option>
+                                        <option value="Planning / Next Quarter">Planning / Next Quarter</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label for="inquiry_message" class="block text-xs font-mono uppercase text-slate-300 mb-1.5">Repository, Infrastructure &amp; Project Context *</label>
+                                <textarea id="inquiry_message" name="message" rows="4" required placeholder="Describe your current application stack, deployment pain points, or what you want to build and deploy with C28..." class="w-full px-4 py-2.5 rounded-xl bg-obsidian-950 border border-emerald-500/25 text-sm text-white focus:outline-none focus:border-neon-400">{{ old('message') }}</textarea>
+                            </div>
+
+                            <button type="submit" class="btn-emerald w-full py-3.5 rounded-full text-obsidian-950 font-bold text-sm">
+                                Submit Engineering Scope Request &rarr;
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <script>
         window.__C28_STATE__ = {
             consoleTabs: @js($consoleTabs),

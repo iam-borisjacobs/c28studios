@@ -2,6 +2,7 @@
 
 namespace App\Filament\Widgets;
 
+use App\Models\Inquiry;
 use App\Models\Post;
 use App\Models\PricingTier;
 use App\Models\Project;
@@ -39,6 +40,14 @@ class C28StatsOverview extends BaseWidget
 
         $publishedPosts = Post::query()->published()->count();
 
+        try {
+            $unreadInquiries = Inquiry::query()->unread()->count();
+            $activePipeline = Inquiry::query()->activePipeline()->count();
+        } catch (\Throwable) {
+            $unreadInquiries = 0;
+            $activePipeline = 0;
+        }
+
         return [
             Stat::make('Active Services', (string) $activeServices)
                 ->description('4-Tier Hierarchy: DevOps -> DevSecOps -> Software -> Web')
@@ -55,7 +64,10 @@ class C28StatsOverview extends BaseWidget
             Stat::make('Published Lab Notes & Posts', (string) $publishedPosts)
                 ->description('Across 5 C28 Engineering Categories')
                 ->color('primary'),
+
+            Stat::make('Unread Inquiries', (string) $unreadInquiries)
+                ->description("{$activePipeline} Active in Engineering Pipeline")
+                ->color($unreadInquiries > 0 ? 'success' : 'gray'),
         ];
     }
 }
-
