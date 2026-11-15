@@ -105,6 +105,27 @@ class PublicFrontendTest extends TestCase
         $response->assertSee('Security Gates');
     }
 
+    public function test_homepage_supports_dynamic_site_name_top_and_bottom_logos_theme_setting_and_back_to_top_button(): void
+    {
+        $this->seed(DatabaseSeeder::class);
+
+        SiteSetting::setValue('brand.name', 'Apex Cloud Studio', 'brand', SiteSetting::TYPE_TEXT);
+        SiteSetting::setValue('brand.logo_top', 'branding/top-logo.png', 'brand', SiteSetting::TYPE_IMAGE);
+        SiteSetting::setValue('brand.logo_bottom', 'branding/bottom-logo.png', 'brand', SiteSetting::TYPE_IMAGE);
+        SiteSetting::setValue('theme.mode', 'light', 'brand', SiteSetting::TYPE_TEXT);
+
+        $response = $this->get('/');
+
+        $response->assertStatus(200);
+        $response->assertSee('Apex Cloud Studio');
+        $response->assertSee('storage/branding/top-logo.png');
+        $response->assertSee('storage/branding/bottom-logo.png');
+        $response->assertSee('data-default-theme="light"', false);
+        $response->assertSee('theme-light');
+        $response->assertSee('id="c28ThemeToggle"', false);
+        $response->assertSee('id="c28BackToTop"', false);
+    }
+
     public function test_project_detail_page_renders_published_project_and_builder_blocks(): void
     {
         $this->seed(DatabaseSeeder::class);

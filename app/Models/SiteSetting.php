@@ -12,6 +12,7 @@ class SiteSetting extends Model
     public const TYPE_TEXT = 'text';
     public const TYPE_JSON = 'json';
     public const TYPE_BOOLEAN = 'boolean';
+    public const TYPE_IMAGE = 'image';
 
     protected $fillable = [
         'key',

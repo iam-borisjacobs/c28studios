@@ -668,6 +668,38 @@ class C28ContentSeeder extends Seeder
         );
 
         SiteSetting::setValue(
+            'brand.logo_top',
+            '',
+            'brand',
+            SiteSetting::TYPE_IMAGE,
+            'Top header logo image (leave empty to display brand.logo_text badge)'
+        );
+
+        SiteSetting::setValue(
+            'brand.logo_bottom',
+            '',
+            'brand',
+            SiteSetting::TYPE_IMAGE,
+            'Bottom footer logo image (leave empty to display brand.logo_text badge)'
+        );
+
+        SiteSetting::setValue(
+            'brand.logo_text',
+            'C28',
+            'brand',
+            SiteSetting::TYPE_TEXT,
+            'Short logo badge text shown when no logo image is uploaded'
+        );
+
+        SiteSetting::setValue(
+            'theme.mode',
+            'dark',
+            'brand',
+            SiteSetting::TYPE_TEXT,
+            'Default site theme mode: dark or light'
+        );
+
+        SiteSetting::setValue(
             'hero.badge',
             'C28 — SOFTWARE & CLOUD ENGINEERING',
             'hero',

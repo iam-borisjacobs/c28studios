@@ -304,6 +304,59 @@ window.c28ToggleMobileNav = function () {
     if (nav) nav.classList.toggle("hidden");
 };
 
+// Theme Switcher (Dark #181818 <-> White/Light Theme)
+window.c28UpdateThemeButton = function () {
+    const labelEl = document.getElementById("c28ThemeToggleLabel");
+    if (!labelEl) return;
+    const isLight = document.documentElement.classList.contains("theme-light");
+    labelEl.textContent = isLight ? "☀ White" : "☾ Dark";
+};
+
+window.c28ToggleTheme = function () {
+    const root = document.documentElement;
+    const isLight = root.classList.contains("theme-light");
+    const nextMode = isLight ? "dark" : "light";
+
+    if (nextMode === "light") {
+        root.classList.add("theme-light");
+        root.classList.remove("dark");
+    } else {
+        root.classList.add("dark");
+        root.classList.remove("theme-light");
+    }
+
+    try {
+        localStorage.setItem("c28_theme", nextMode);
+    } catch {}
+
+    window.c28UpdateThemeButton();
+};
+
+// Bottom-to-Top ("Back to Top") Controller
+window.c28ScrollToTop = function () {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+};
+
+(function initThemeAndBackToTop() {
+    window.c28UpdateThemeButton();
+
+    const backToTopBtn = document.getElementById("c28BackToTop");
+    if (!backToTopBtn) return;
+
+    const onScroll = () => {
+        if (window.scrollY > 320) {
+            backToTopBtn.classList.remove("hidden");
+            backToTopBtn.classList.add("flex");
+        } else {
+            backToTopBtn.classList.add("hidden");
+            backToTopBtn.classList.remove("flex");
+        }
+    };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+})();
+
 window.addEventListener("keydown", (e) => {
     if (e.key === "Escape") {
         window.c28CloseModal();
@@ -352,7 +405,7 @@ window.addEventListener("keydown", (e) => {
                     0,
                     0,
                     canvas.width,
-                    canvas.height
+                    canvas.height,
                 );
                 currentFrame = (currentFrame + 1) % totalFrames;
             }
@@ -384,7 +437,7 @@ window.addEventListener("keydown", (e) => {
                     0,
                     0,
                     canvas.width,
-                    canvas.height
+                    canvas.height,
                 );
                 startPlayback();
             };

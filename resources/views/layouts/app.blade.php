@@ -1,18 +1,52 @@
 @php
     $brandName = $settings['brand.name'] ?? 'C28 — Software & Cloud Engineering';
     $brandStatement = $settings['brand.statement'] ?? 'We build digital products and help teams deploy, secure, and operate them reliably.';
+    $logoTop = trim((string) ($settings['brand.logo_top'] ?? ''));
+    $logoBottom = trim((string) ($settings['brand.logo_bottom'] ?? ''));
+    $logoText = trim((string) ($settings['brand.logo_text'] ?? 'C28')) ?: 'C28';
+    $defaultTheme = in_array(($settings['theme.mode'] ?? 'dark'), ['dark', 'light'], true)
+        ? $settings['theme.mode']
+        : 'dark';
+    $resolveLogoUrl = static function (string $path): string {
+        if ($path === '') {
+            return '';
+        }
+        if (str_starts_with($path, 'http://') || str_starts_with($path, 'https://') || str_starts_with($path, '/')) {
+            return $path;
+        }
+        return asset('storage/' . ltrim($path, '/'));
+    };
+    $logoTopUrl = $resolveLogoUrl($logoTop);
+    $logoBottomUrl = $resolveLogoUrl($logoBottom);
     $primaryCtaLabel = $settings['cta.primary_label'] ?? 'Book a Consultation';
     $contactEmail = $settings['contact.email'] ?? 'engineering@c28studios.com';
     $githubUrl = $settings['social.github_url'] ?? 'https://github.com/iam-borisjacobs/c28studios';
 @endphp
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="scroll-smooth dark">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" data-default-theme="{{ $defaultTheme }}" class="scroll-smooth {{ $defaultTheme === 'light' ? 'theme-light' : 'dark' }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="author" content="C28 — Software & Cloud Engineering">
     <title>@yield('title', $brandName . ' | Deploy, Secure & Operate Reliably')</title>
+
+    <script>
+        (function () {
+            try {
+                var saved = localStorage.getItem('c28_theme');
+                var mode = (saved === 'light' || saved === 'dark') ? saved : @js($defaultTheme);
+                var root = document.documentElement;
+                if (mode === 'light') {
+                    root.classList.add('theme-light');
+                    root.classList.remove('dark');
+                } else {
+                    root.classList.add('dark');
+                    root.classList.remove('theme-light');
+                }
+            } catch (e) {}
+        })();
+    </script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -27,10 +61,14 @@
         <div class="w-full px-4 sm:px-6 lg:px-10 xl:px-12">
             <div class="w-full px-4 sm:px-6 lg:px-10 h-16 flex items-center justify-between border-x border-white/15">
             <a href="{{ route('home') }}" class="flex items-center gap-2.5 group" aria-label="{{ $brandName }} Home">
-                <div class="w-7 h-7 rounded-[2px] bg-neon-accent flex items-center justify-center text-obsidian-950 font-mono font-bold text-xs tracking-tighter">
-                    C28
-                </div>
-                <span class="text-white font-semibold text-base tracking-tight">C28 Studios</span>
+                @if($logoTopUrl !== '')
+                    <img src="{{ $logoTopUrl }}" alt="{{ $brandName }} Logo" class="h-8 w-auto object-contain">
+                @else
+                    <div class="w-7 h-7 rounded-[2px] bg-neon-accent flex items-center justify-center text-obsidian-950 font-mono font-bold text-xs tracking-tighter">
+                        {{ $logoText }}
+                    </div>
+                @endif
+                <span class="text-white font-semibold text-base tracking-tight">{{ $brandName }}</span>
             </a>
 
             <nav class="hidden lg:flex items-center gap-7 text-[11px] font-mono uppercase tracking-[0.14em] text-slate-400" aria-label="Primary Navigation">
@@ -41,7 +79,18 @@
                 <a href="{{ route('home') }}#insights" class="hover:text-white transition-colors"><span class="text-slate-600 mr-1.5">/</span>Lab Notes</a>
             </nav>
 
-            <div class="flex items-center gap-3">
+            <div class="flex items-center gap-2.5">
+                <button
+                    type="button"
+                    id="c28ThemeToggle"
+                    onclick="window.c28ToggleTheme && window.c28ToggleTheme()"
+                    aria-label="Toggle Dark or White Theme"
+                    title="Switch Theme (Dark / White)"
+                    class="border border-white/15 bg-obsidian-900 hover:border-neon-accent/60 hover:text-neon-accent text-slate-200 font-mono text-xs px-3 py-2 rounded-[2px] transition-colors flex items-center gap-1.5"
+                >
+                    <span id="c28ThemeToggleLabel">Theme</span>
+                </button>
+
                 <button
                     type="button"
                     onclick="window.c28OpenModal && window.c28OpenModal(@js($primaryCtaLabel))"
@@ -83,9 +132,13 @@
             <div class="grid grid-cols-2 md:grid-cols-5 gap-8 pb-14 border-b border-emerald-500/10">
                 <div class="col-span-2">
                     <div class="flex items-center gap-3 mb-4">
-                        <div class="w-8 h-8 rounded-lg btn-emerald flex items-center justify-center text-obsidian-950 font-extrabold text-xs">
-                            C28
-                        </div>
+                        @if($logoBottomUrl !== '')
+                            <img src="{{ $logoBottomUrl }}" alt="{{ $brandName }} Logo" class="h-8 w-auto object-contain">
+                        @else
+                            <div class="w-8 h-8 rounded-lg btn-emerald flex items-center justify-center text-obsidian-950 font-extrabold text-xs">
+                                {{ $logoText }}
+                            </div>
+                        @endif
                         <span class="text-white font-bold text-lg tracking-tight">{{ $brandName }}</span>
                     </div>
                     <p class="text-xs sm:text-sm text-slate-400 max-w-sm leading-relaxed mb-4">
@@ -133,11 +186,25 @@
         </div>
 
         <div class="select-none pointer-events-none text-center overflow-hidden leading-none pt-2 -mb-6 sm:-mb-10">
-            <span class="text-[18vw] font-extrabold tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-emerald-500/20 via-emerald-500/5 to-transparent">
-                C28Studios
+            <span class="text-[12vw] sm:text-[14vw] font-extrabold tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-emerald-500/20 via-emerald-500/5 to-transparent">
+                {{ $brandName }}
             </span>
         </div>
     </footer>
+
+    <!-- Bottom-to-Top Floating Button -->
+    <button
+        type="button"
+        id="c28BackToTop"
+        onclick="window.c28ScrollToTop && window.c28ScrollToTop()"
+        aria-label="Scroll back to top"
+        title="Back to top"
+        class="fixed bottom-6 right-6 z-40 hidden items-center justify-center w-11 h-11 rounded-[2px] border border-white/20 bg-obsidian-900/95 hover:border-neon-accent text-neon-accent shadow-xl transition-all"
+    >
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7" />
+        </svg>
+    </button>
 
     <!-- Interactive Consultation / Architecture Scoping Modal -->
     <div id="consultationModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-obsidian-950/85 backdrop-blur-md" role="dialog" aria-modal="true" aria-labelledby="consultationModalTitle">

@@ -89,6 +89,10 @@ class HomeController extends Controller
         $defaults = [
             'brand.name' => 'C28 — Software & Cloud Engineering',
             'brand.statement' => 'We build digital products and help teams deploy, secure, and operate them reliably.',
+            'brand.logo_top' => '',
+            'brand.logo_bottom' => '',
+            'brand.logo_text' => 'C28',
+            'theme.mode' => 'dark',
             'hero.badge' => 'C28 — SOFTWARE & CLOUD ENGINEERING',
             'hero.headline' => 'We Build Digital Products & Help Teams Deploy, Secure, and Operate Them Reliably.',
             'hero.subheadline' => 'Instead of hiring separate people for application code, server configuration, CI/CD automation, and security, partner with one connected engineering studio built for startup founders, small SaaS teams, and growing businesses.',

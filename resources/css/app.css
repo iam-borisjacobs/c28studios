@@ -110,3 +110,97 @@
         box-shadow: 0 0 15px rgba(16, 185, 129, 0.15);
     }
 }
+
+/* ==========================================================================
+   White / Light Theme Overrides (html.theme-light)
+   Preserves all architectural grid lines, borders, and readability
+   ========================================================================== */
+html.theme-light body {
+    background-color: #f8fafc;
+    color: #0f172a;
+}
+
+html.theme-light .bg-carbon-grid {
+    background-size: 48px 48px;
+    background-image:
+        linear-gradient(to right, rgba(15, 23, 42, 0.06) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(15, 23, 42, 0.06) 1px, transparent 1px);
+}
+
+html.theme-light .bg-hero-hatch {
+    background-color: #ffffff;
+    background-image: repeating-linear-gradient(
+        -45deg,
+        rgba(15, 23, 42, 0.055) 0px,
+        rgba(15, 23, 42, 0.055) 1px,
+        transparent 1px,
+        transparent 14px
+    );
+}
+
+html.theme-light .bg-obsidian-950,
+html.theme-light .bg-obsidian-950\/95,
+html.theme-light .bg-obsidian-950\/90,
+html.theme-light .bg-obsidian-950\/85,
+html.theme-light .bg-obsidian-950\/80,
+html.theme-light .bg-obsidian-950\/60,
+html.theme-light .bg-\[\#181818\],
+html.theme-light .bg-\[\#181818\]\/95,
+html.theme-light .bg-\[\#181818\]\/90 {
+    background-color: #ffffff !important;
+}
+
+html.theme-light .bg-obsidian-900,
+html.theme-light .bg-obsidian-900\/95,
+html.theme-light .bg-obsidian-900\/90,
+html.theme-light .bg-obsidian-900\/50,
+html.theme-light .bg-obsidian-850,
+html.theme-light .bg-obsidian-800 {
+    background-color: #f1f5f9 !important;
+}
+
+html.theme-light .glass-card {
+    background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+    border-color: rgba(15, 23, 42, 0.14);
+    box-shadow: 0 12px 32px -12px rgba(15, 23, 42, 0.1);
+}
+
+html.theme-light .text-white,
+html.theme-light .text-slate-100 {
+    color: #0f172a !important;
+}
+
+html.theme-light .text-slate-200,
+html.theme-light .text-slate-300,
+html.theme-light .text-slate-300\/90 {
+    color: #334155 !important;
+}
+
+html.theme-light .text-slate-400,
+html.theme-light .text-slate-500 {
+    color: #475569 !important;
+}
+
+html.theme-light .border-white\/10,
+html.theme-light .border-white\/15,
+html.theme-light .border-white\/20 {
+    border-color: rgba(15, 23, 42, 0.16) !important;
+}
+
+html.theme-light .divide-white\/10 > :not([hidden]) ~ :not([hidden]),
+html.theme-light .divide-white\/15 > :not([hidden]) ~ :not([hidden]) {
+    border-color: rgba(15, 23, 42, 0.16) !important;
+}
+
+html.theme-light .text-white\/40,
+html.theme-light .text-white\/25 {
+    color: rgba(15, 23, 42, 0.45) !important;
+}
+
+/* Keep the Right Hero 3D Cube Telemetry Panel dark so neon green dots stay vibrant */
+html.theme-light .bg-hero-cube-grid {
+    background-color: #181818 !important;
+}
+html.theme-light .bg-hero-cube-grid .bg-\[\#181818\]\/90 {
+    background-color: rgba(24, 24, 24, 0.9) !important;
+}

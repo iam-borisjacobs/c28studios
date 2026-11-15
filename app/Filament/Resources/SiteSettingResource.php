@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\SiteSettingResource\Pages;
 use App\Models\SiteSetting;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
@@ -61,6 +62,7 @@ class SiteSettingResource extends Resource
                             ->options([
                                 SiteSetting::TYPE_TEXT => 'Text / String',
                                 SiteSetting::TYPE_BOOLEAN => 'Boolean (1 / 0)',
+                                SiteSetting::TYPE_IMAGE => 'Image Upload (Logo / Asset)',
                                 SiteSetting::TYPE_JSON => 'Structured JSON Payload',
                             ])
                             ->default(SiteSetting::TYPE_TEXT)
@@ -73,8 +75,18 @@ class SiteSettingResource extends Resource
                         Textarea::make('value')
                             ->label('Setting Value (Text or Boolean 1/0)')
                             ->rows(4)
-                            ->visible(fn (Get $get): bool => $get('type') !== SiteSetting::TYPE_JSON)
-                            ->dehydrated(fn (Get $get): bool => $get('type') !== SiteSetting::TYPE_JSON)
+                            ->visible(fn (Get $get): bool => ! in_array($get('type'), [SiteSetting::TYPE_JSON, SiteSetting::TYPE_IMAGE], true))
+                            ->dehydrated(fn (Get $get): bool => ! in_array($get('type'), [SiteSetting::TYPE_JSON, SiteSetting::TYPE_IMAGE], true))
+                            ->columnSpanFull(),
+
+                        FileUpload::make('value')
+                            ->label('Upload Image (Logo / Brand Asset)')
+                            ->image()
+                            ->disk('public')
+                            ->directory('branding')
+                            ->maxSize(2048)
+                            ->visible(fn (Get $get): bool => $get('type') === SiteSetting::TYPE_IMAGE)
+                            ->dehydrated(fn (Get $get): bool => $get('type') === SiteSetting::TYPE_IMAGE)
                             ->columnSpanFull(),
 
                         Textarea::make('json_value')
@@ -138,6 +150,7 @@ class SiteSettingResource extends Resource
                     ->options([
                         SiteSetting::TYPE_TEXT => 'Text',
                         SiteSetting::TYPE_BOOLEAN => 'Boolean',
+                        SiteSetting::TYPE_IMAGE => 'Image',
                         SiteSetting::TYPE_JSON => 'JSON',
                     ]),
             ])
