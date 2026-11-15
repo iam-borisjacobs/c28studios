@@ -3,8 +3,24 @@
 @tailwind utilities;
 
 @layer base {
+    html {
+        font-size: 17px;
+    }
+
+    @media (min-width: 1024px) {
+        html {
+            font-size: 18px;
+        }
+    }
+
+    @media (min-width: 1440px) {
+        html {
+            font-size: 19px;
+        }
+    }
+
     body {
-        background-color: #050806;
+        background-color: #181818;
         color: #f1f5f9;
         font-family: 'Plus Jakarta Sans', sans-serif;
         overflow-x: hidden;
@@ -12,12 +28,33 @@
 }
 
 @layer components {
-    /* Subtle Carbon Grid Overlay */
+    /* Subtle Carbon Grid Overlay — visible on #181818 */
     .bg-carbon-grid {
         background-size: 48px 48px;
         background-image:
-            linear-gradient(to right, rgba(16, 185, 129, 0.04) 1px, transparent 1px),
-            linear-gradient(to bottom, rgba(16, 185, 129, 0.04) 1px, transparent 1px);
+            linear-gradient(to right, rgba(255, 255, 255, 0.045) 1px, transparent 1px),
+            linear-gradient(to bottom, rgba(255, 255, 255, 0.045) 1px, transparent 1px);
+    }
+
+    /* Architectural Diagonal Hatch for Hero Left Cell — visible on #181818 */
+    .bg-hero-hatch {
+        background-color: #181818;
+        background-image: repeating-linear-gradient(
+            -45deg,
+            rgba(255, 255, 255, 0.05) 0px,
+            rgba(255, 255, 255, 0.05) 1px,
+            transparent 1px,
+            transparent 14px
+        );
+    }
+
+    /* Right Hero Cell Grid — matches the motion frame grid on #181818 */
+    .bg-hero-cube-grid {
+        background-color: #181818;
+        background-size: 56px 56px;
+        background-image:
+            linear-gradient(to right, rgba(255, 255, 255, 0.055) 1px, transparent 1px),
+            linear-gradient(to bottom, rgba(255, 255, 255, 0.055) 1px, transparent 1px);
     }
 
     /* Vertical Light Beam & Aurora */

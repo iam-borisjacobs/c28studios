@@ -16,61 +16,147 @@
 @endphp
 
 @section('content')
-    <!-- SECTION 02: ENGINEERING HERO & LIVE CONTROL PLANE CONSOLE -->
-    <section class="relative pt-14 pb-24 lg:pt-20 lg:pb-28 overflow-hidden hero-beam">
-        <div class="pointer-events-none absolute top-0 right-[12%] lg:right-[18%] w-36 h-[520px] vertical-light-pillar opacity-80 hidden sm:block"></div>
-        <div class="pointer-events-none absolute top-0 right-[16.5%] lg:right-[21.5%] w-1.5 h-[420px] vertical-light-core opacity-75 hidden sm:block"></div>
+    <!-- SECTION 01: ARCHITECTURAL HERO & EZGIF SYSTEM VISUALIZATION -->
+    <section class="bg-[#181818] border-b border-white/15">
+        <div class="w-full px-4 sm:px-6 lg:px-10 xl:px-12">
+        <div class="w-full border-x border-white/15 relative">
+            <!-- Top Intersection Crosshairs -->
+            <span aria-hidden="true" class="hidden lg:block absolute -top-2.5 -left-1.5 font-mono text-xs text-white/40 select-none pointer-events-none">+</span>
+            <span aria-hidden="true" class="hidden lg:block absolute -top-2.5 left-1/2 -translate-x-1/2 font-mono text-xs text-white/40 select-none pointer-events-none">+</span>
+            <span aria-hidden="true" class="hidden lg:block absolute -top-2.5 -right-1.5 font-mono text-xs text-white/40 select-none pointer-events-none">+</span>
 
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div class="max-w-3xl">
-                <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full section-badge mb-6">
-                    <span class="w-2 h-2 rounded-full bg-neon-400 animate-ping"></span>
-                    <span class="text-xs font-mono uppercase tracking-widest text-neon-400 font-semibold">
-                        {{ $heroBadge }}
-                    </span>
+            <!-- Primary 50/50 Split Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 border-b border-white/15">
+                <!-- Left Cell: Headline, Subheadline & Sharp CTAs -->
+                <div class="lg:col-span-6 bg-hero-hatch px-6 py-10 sm:px-10 sm:py-14 lg:px-14 lg:py-16 xl:px-16 flex flex-col justify-center border-b lg:border-b-0 lg:border-r border-white/15">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 border border-white/20 bg-[#181818]/90 text-[11px] font-mono text-slate-300 tracking-wide w-fit mb-7">
+                        <span>{{ $heroBadge }}</span>
+                        <span class="inline-block w-1.5 h-3 bg-neon-accent/90" aria-hidden="true"></span>
+                    </div>
+
+                    <h1 class="text-2xl sm:text-3xl lg:text-4xl xl:text-[2.5rem] font-bold text-white tracking-[-0.025em] leading-[1.12] mb-5">
+                        {{ $heroHeadline }}
+                    </h1>
+
+                    <p class="text-sm sm:text-base text-slate-300 leading-relaxed mb-8 max-w-2xl">
+                        {{ $heroSubheadline }}
+                    </p>
+
+                    <div class="flex flex-wrap items-center gap-3">
+                        <a
+                            href="#services"
+                            class="px-6 py-3.5 border border-white/20 bg-[#181818] hover:border-white/40 text-xs font-mono text-slate-200 transition-colors rounded-[2px]"
+                        >
+                            Explore Services
+                        </a>
+                        <button
+                            type="button"
+                            onclick="window.c28OpenModal && window.c28OpenModal('Architecture Review & Scope')"
+                            class="px-7 py-3.5 bg-neon-accent hover:bg-neon-400 text-obsidian-950 font-bold text-xs font-mono tracking-wide transition-colors rounded-[2px]"
+                        >
+                            {{ $settings['cta.primary_label'] ?? 'Book Consultation' }}
+                        </button>
+                    </div>
                 </div>
 
-                <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight leading-[1.1] mb-4">
-                    {{ $heroHeadline }}
-                </h1>
+                <!-- Right Cell: EZGIF 235-Frame 3D Dotted Dual-Cube Animation -->
+                <div class="lg:col-span-6 bg-hero-cube-grid relative flex items-center justify-center overflow-hidden min-h-[340px] sm:min-h-[440px] lg:min-h-[540px] xl:min-h-[600px]">
+                    <!-- Top Telemetry Bar matching reference -->
+                    <div class="absolute top-4 inset-x-4 z-10 flex items-center justify-between pointer-events-none">
+                        <span class="px-2.5 py-1 bg-[#181818]/90 border border-neon-500/35 text-[10px] font-mono uppercase tracking-[0.16em] text-neon-accent">
+                            ALL SYSTEMS OPERATIONAL
+                        </span>
+                        <div class="hidden sm:flex items-center gap-1 px-2 py-1 bg-[#181818]/90 border border-neon-500/30" aria-hidden="true">
+                            @for($bar = 0; $bar < 14; $bar++)
+                                <span class="w-1 h-3 {{ $bar < 10 ? 'bg-neon-accent/85' : 'bg-white/20' }}"></span>
+                            @endfor
+                        </div>
+                    </div>
 
-                <p class="text-sm font-mono text-neon-400 mb-4">
-                    {{ $brandStatement }}
-                </p>
-
-                <p class="text-base sm:text-lg text-slate-300/90 leading-relaxed mb-8 max-w-2xl">
-                    {{ $heroSubheadline }}
-                </p>
-
-                <div class="flex flex-wrap items-center gap-4 mb-8">
-                    <button
-                        type="button"
-                        onclick="window.c28OpenModal && window.c28OpenModal('Architecture Review & Scope')"
-                        class="btn-emerald text-obsidian-950 font-bold text-sm px-7 py-3.5 rounded-full flex items-center gap-2"
+                    <img
+                        id="heroEzgifFallback"
+                        src="{{ asset('media/hero-frames/ezgif-frame-001.jpg') }}"
+                        alt="C28 Systems Operational 3D Telemetry Animation"
+                        width="1086"
+                        height="1078"
+                        loading="eager"
+                        decoding="async"
+                        class="w-full h-full max-h-[580px] object-contain object-center block mix-blend-lighten"
                     >
-                        <span>{{ $settings['cta.primary_label'] ?? 'Book a Consultation' }}</span>
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
-                    </button>
-                    <a href="#services" class="px-6 py-3.5 rounded-full text-xs sm:text-sm font-mono text-slate-200 hover:text-neon-400 border border-emerald-500/30 bg-obsidian-950/70 transition">
-                        Explore 4-Tier Architecture &rarr;
-                    </a>
-                </div>
-
-                <div class="flex flex-wrap items-center gap-x-6 gap-y-2 text-xs text-slate-400 font-mono">
-                    <span class="flex items-center gap-1.5">
-                        <span class="text-neon-400">&#10003;</span> Automated GitHub &rarr; Production CI/CD
-                    </span>
-                    <span class="flex items-center gap-1.5">
-                        <span class="text-neon-400">&#10003;</span> Docker, Linux &amp; Nginx TLS 1.3 Hardening
-                    </span>
-                    <span class="flex items-center gap-1.5">
-                        <span class="text-neon-400">&#10003;</span> DevSecOps Scanning &amp; Full-Stack Software
-                    </span>
+                    <canvas
+                        id="heroEzgifCanvas"
+                        width="1066"
+                        height="1058"
+                        data-base-url="{{ asset('media/hero-frames') }}"
+                        data-frame-count="235"
+                        aria-label="C28 Systems Operational 3D Telemetry Animation"
+                        class="hidden w-full h-full max-h-[580px] object-contain object-center mix-blend-lighten"
+                    ></canvas>
                 </div>
             </div>
 
-            <!-- Interactive Control Plane Console -->
-            <div class="mt-12 relative">
+            <!-- Bottom 50/50 Strip: Engineering Stack & Verifiable Metrics -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 relative bg-[#181818]">
+                <span aria-hidden="true" class="hidden lg:block absolute -bottom-2.5 -left-1.5 font-mono text-xs text-white/40 select-none pointer-events-none">+</span>
+                <span aria-hidden="true" class="hidden lg:block absolute -bottom-2.5 left-1/2 -translate-x-1/2 font-mono text-xs text-white/40 select-none pointer-events-none">+</span>
+                <span aria-hidden="true" class="hidden lg:block absolute -bottom-2.5 -right-1.5 font-mono text-xs text-white/40 select-none pointer-events-none">+</span>
+
+                <!-- Bottom-Left: Authentic Monochrome Engineering Stack -->
+                <div class="lg:col-span-6 px-6 sm:px-10 lg:px-14 py-6 border-b lg:border-b-0 lg:border-r border-white/15 flex flex-wrap items-center justify-between gap-x-6 gap-y-3 text-slate-400 font-mono text-xs tracking-wider uppercase">
+                    <span class="flex items-center gap-2">
+                        <span class="w-1.5 h-1.5 bg-slate-400 inline-block"></span>
+                        DOCKER
+                    </span>
+                    <span class="flex items-center gap-2">
+                        <span class="w-1.5 h-1.5 bg-slate-400 inline-block"></span>
+                        GITHUB ACTIONS
+                    </span>
+                    <span class="flex items-center gap-2">
+                        <span class="w-1.5 h-1.5 bg-slate-400 inline-block"></span>
+                        NGINX TLS 1.3
+                    </span>
+                    <span class="flex items-center gap-2">
+                        <span class="w-1.5 h-1.5 bg-slate-400 inline-block"></span>
+                        TRIVY
+                    </span>
+                </div>
+
+                <!-- Bottom-Right: 3-Column Telemetry / Architecture Strip -->
+                <div class="lg:col-span-6 grid grid-cols-3 divide-x divide-white/15">
+                    <div class="px-4 sm:px-7 py-5">
+                        <div class="text-[10px] font-mono uppercase tracking-widest text-slate-500 mb-1.5">
+                            Core Disciplines
+                        </div>
+                        <div class="text-xl sm:text-2xl font-mono font-semibold text-white">
+                            04<span class="text-neon-accent">_</span>
+                        </div>
+                    </div>
+                    <div class="px-4 sm:px-7 py-5">
+                        <div class="text-[10px] font-mono uppercase tracking-widest text-slate-500 mb-1.5">
+                            Release Downtime
+                        </div>
+                        <div class="text-xl sm:text-2xl font-mono font-semibold text-white">
+                            0m<span class="text-neon-accent">_</span>
+                        </div>
+                    </div>
+                    <div class="px-4 sm:px-7 py-5">
+                        <div class="text-[10px] font-mono uppercase tracking-widest text-slate-500 mb-1.5">
+                            Security Gates
+                        </div>
+                        <div class="text-xl sm:text-2xl font-mono font-semibold text-white">
+                            100%<span class="text-neon-accent">_</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+    </section>
+
+    <!-- SECTION 02: INTERACTIVE LIVE CONTROL PLANE CONSOLE -->
+    <section class="py-16 bg-obsidian-900 border-b border-white/10">
+        <div class="w-full px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-20">
+            <div class="relative">
                 <div class="glass-card rounded-2xl border border-emerald-500/30 overflow-hidden shadow-2xl">
                     <div class="bg-obsidian-950/90 border-b border-emerald-500/15 px-4 sm:px-6 py-3.5 flex flex-wrap items-center justify-between gap-3">
                         <div class="flex items-center gap-3">
@@ -208,7 +294,7 @@
 
     <!-- SECTION 03: 4-TIER CONNECTED SERVICE ARCHITECTURE (#services) -->
     <section id="services" class="py-24 relative bg-obsidian-950/60 border-y border-emerald-500/15">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="w-full px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-20">
             <div class="text-center max-w-3xl mx-auto mb-16">
                 <span class="inline-block px-3.5 py-1 rounded-full text-xs font-mono uppercase tracking-widest text-neon-400 section-badge mb-4">
                     UNIFIED SERVICE ARCHITECTURE
@@ -287,7 +373,7 @@
 
     <!-- SECTION 04: PRODUCTION CODE ARTIFACT INSPECTOR -->
     <section id="capabilities" class="py-24 relative">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="w-full px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-20">
             <div class="glass-card rounded-3xl p-6 sm:p-10 relative overflow-hidden">
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
                     <div class="lg:col-span-5 space-y-5">
@@ -342,7 +428,7 @@
     <!-- SECTION 05: INTERACTIVE 10-STEP PRODUCTION BLUEPRINT (#blueprint) -->
     @if(count($blueprintSteps) > 0)
         <section id="blueprint" class="py-24 relative bg-obsidian-950/50 border-t border-emerald-500/15">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="w-full px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-20">
                 <div class="text-center max-w-3xl mx-auto mb-14">
                     <span class="inline-block px-3.5 py-1 rounded-full text-xs font-mono uppercase tracking-widest text-neon-400 section-badge mb-4">
                         PROVEN DELIVERY SEQUENCE
@@ -408,7 +494,7 @@
     <!-- SECTION 06: DOCUMENTED PROJECTS & LAB DEMONSTRATIONS (#projects) -->
     @if($projects->isNotEmpty())
         <section id="projects" class="py-24 relative border-t border-emerald-500/15">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="w-full px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-20">
                 <div class="text-center max-w-3xl mx-auto mb-16">
                     <span class="inline-block px-3.5 py-1 rounded-full text-xs font-mono uppercase tracking-widest text-neon-400 section-badge mb-4">
                         TECHNICAL EVIDENCE &amp; ARCHITECTURE DOSSIERS
@@ -492,7 +578,7 @@
     <!-- SECTION 07: TRANSPARENT ENGAGEMENT & PRICING (#engagement) -->
     @if($sprintTiers->isNotEmpty() || $retainerTiers->isNotEmpty())
         <section id="engagement" class="py-24 relative bg-obsidian-950/60 border-y border-emerald-500/15">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="w-full px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-20">
                 <div class="text-center max-w-3xl mx-auto mb-12">
                     <span class="inline-block px-3.5 py-1 rounded-full text-xs font-mono uppercase tracking-widest text-neon-400 section-badge mb-4">
                         ENGAGEMENT OPTIONS
@@ -624,7 +710,7 @@
     <!-- SECTION 08: FOUNDER BOTTLENECK SCENARIOS (#scenarios) -->
     @if(count($scenarios) > 0)
         <section id="scenarios" class="py-24 relative">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="w-full px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-20">
                 <div class="text-center max-w-3xl mx-auto mb-16">
                     <span class="inline-block px-3.5 py-1 rounded-full text-xs font-mono uppercase tracking-widest text-neon-400 section-badge mb-4">
                         FOUNDER BOTTLENECKS SOLVED
@@ -667,7 +753,7 @@
     <!-- SECTION 09: ENGINEERING WALKTHROUGHS & LAB NOTES (#insights) -->
     @if($posts->isNotEmpty())
         <section id="insights" class="py-24 relative bg-obsidian-950/50 border-t border-emerald-500/15">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="w-full px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-20">
                 <div class="text-center max-w-3xl mx-auto mb-16">
                     <span class="inline-block px-3.5 py-1 rounded-full text-xs font-mono uppercase tracking-widest text-neon-400 section-badge mb-4">
                         SHOW WHAT WE KNOW BY DEMONSTRATING WHAT WE DO
@@ -729,7 +815,7 @@
     <!-- SECTION 10: TECHNICAL & ENGAGEMENT FAQ (#faq) -->
     @if($faqs->isNotEmpty())
         <section id="faq" class="py-24 relative bg-obsidian-900/40 border-t border-emerald-500/15">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="w-full px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-20">
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
                     <div class="lg:col-span-5">
                         <span class="inline-block px-3.5 py-1 rounded-full text-xs font-mono uppercase tracking-widest text-neon-400 section-badge mb-4">
@@ -780,7 +866,7 @@
 
     <!-- SECTION 11: ARCHITECTURE SCOPING & CONSULTATION INTAKE (#consultation) -->
     <section id="consultation" class="py-24 relative bg-obsidian-950/85 border-t border-emerald-500/20">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="w-full px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-20">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
                 <div class="lg:col-span-5">
                     <span class="inline-block px-3.5 py-1 rounded-full text-xs font-mono uppercase tracking-widest text-neon-400 section-badge mb-4">

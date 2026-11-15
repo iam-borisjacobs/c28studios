@@ -88,6 +88,23 @@ class PublicFrontendTest extends TestCase
         $response->assertSee('Live CMS Updated Subheadline: End-to-end software and cloud engineering from commit to production.');
     }
 
+    public function test_homepage_renders_architectural_hero_with_ezgif_animation_and_reduced_motion_fallback(): void
+    {
+        $this->seed(DatabaseSeeder::class);
+
+        $response = $this->get('/');
+
+        $response->assertStatus(200);
+        $response->assertSee('media/hero-frames/ezgif-frame-001.jpg');
+        $response->assertSee('heroEzgifCanvas');
+        $response->assertSee('data-frame-count="235"', false);
+        $response->assertSee('ALL SYSTEMS OPERATIONAL');
+        $response->assertSee('Explore Services');
+        $response->assertSee('Core Disciplines');
+        $response->assertSee('Release Downtime');
+        $response->assertSee('Security Gates');
+    }
+
     public function test_project_detail_page_renders_published_project_and_builder_blocks(): void
     {
         $this->seed(DatabaseSeeder::class);

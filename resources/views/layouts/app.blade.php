@@ -22,81 +22,54 @@
 </head>
 <body class="bg-obsidian-900 bg-carbon-grid text-slate-100 antialiased selection:bg-neon-500 selection:text-obsidian-950 min-h-screen flex flex-col">
 
-    <!-- Top Telemetry / Status Bar -->
-    <div class="bg-obsidian-950/90 border-b border-emerald-500/15 py-2 px-4 text-center text-xs text-slate-400">
-        <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
-            <div class="flex items-center gap-2">
-                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-mono uppercase tracking-wider bg-emerald-500/15 text-neon-400 border border-emerald-500/30">
-                    <span class="w-1.5 h-1.5 rounded-full bg-neon-400 mr-1.5 animate-pulse"></span>
-                    {{ $brandName }}
-                </span>
-                <span class="hidden sm:inline font-mono text-[11px] text-slate-400">DEVOPS • DEVSECOPS • SOFTWARE • WEB</span>
-            </div>
-            <div class="flex items-center gap-3">
-                <span class="hidden md:inline">Need an application built, containerized with Docker, or deployed with CI/CD?</span>
-                <button type="button" onclick="window.c28OpenModal && window.c28OpenModal('Discovery Consultation')" class="text-neon-400 hover:text-neon-accent font-mono text-[11px] font-semibold underline underline-offset-4">
-                    Book Architecture Review &rarr;
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Sticky Navigation Header -->
-    <header class="sticky top-0 z-50 bg-obsidian-950/85 backdrop-blur-xl border-b border-emerald-500/15">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-            <a href="{{ route('home') }}" class="flex items-center gap-3 group" aria-label="{{ $brandName }} Home">
-                <div class="w-9 h-9 rounded-lg btn-emerald flex items-center justify-center text-obsidian-950 font-extrabold text-sm tracking-tighter shadow-lg">
+    <!-- Architectural Navigation Header -->
+    <header class="sticky top-0 z-50 bg-[#181818]/95 backdrop-blur-md border-b border-white/15">
+        <div class="w-full px-4 sm:px-6 lg:px-10 xl:px-12">
+            <div class="w-full px-4 sm:px-6 lg:px-10 h-16 flex items-center justify-between border-x border-white/15">
+            <a href="{{ route('home') }}" class="flex items-center gap-2.5 group" aria-label="{{ $brandName }} Home">
+                <div class="w-7 h-7 rounded-[2px] bg-neon-accent flex items-center justify-center text-obsidian-950 font-mono font-bold text-xs tracking-tighter">
                     C28
                 </div>
-                <div class="flex flex-col">
-                    <div class="flex items-center gap-2">
-                        <span class="text-white font-bold text-lg tracking-tight">C28</span>
-                        <span class="text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded bg-emerald-950/90 text-neon-400 border border-emerald-500/25">
-                            Software &amp; Cloud
-                        </span>
-                    </div>
-                    <span class="text-[11px] text-slate-400 hidden sm:inline">Engineering Studio</span>
-                </div>
+                <span class="text-white font-semibold text-base tracking-tight">C28 Studios</span>
             </a>
 
-            <nav class="hidden lg:flex items-center gap-6 text-sm font-medium text-slate-300" aria-label="Primary Navigation">
-                <a href="{{ route('home') }}#services" class="hover:text-neon-400 transition-colors">Services</a>
-                <a href="{{ route('home') }}#blueprint" class="hover:text-neon-400 transition-colors">10-Step Blueprint</a>
-                <a href="{{ route('home') }}#projects" class="hover:text-neon-400 transition-colors">Case Studies &amp; Lab</a>
-                <a href="{{ route('home') }}#engagement" class="hover:text-neon-400 transition-colors">Pricing &amp; Sprints</a>
-                <a href="{{ route('home') }}#insights" class="hover:text-neon-400 transition-colors">Lab Notes</a>
-                <a href="{{ route('home') }}#faq" class="hover:text-neon-400 transition-colors">FAQ</a>
+            <nav class="hidden lg:flex items-center gap-7 text-[11px] font-mono uppercase tracking-[0.14em] text-slate-400" aria-label="Primary Navigation">
+                <a href="{{ route('home') }}#services" class="hover:text-white transition-colors"><span class="text-slate-600 mr-1.5">/</span>Services</a>
+                <a href="{{ route('home') }}#blueprint" class="hover:text-white transition-colors"><span class="text-slate-600 mr-1.5">/</span>Blueprint</a>
+                <a href="{{ route('home') }}#projects" class="hover:text-white transition-colors"><span class="text-slate-600 mr-1.5">/</span>Projects</a>
+                <a href="{{ route('home') }}#engagement" class="hover:text-white transition-colors"><span class="text-slate-600 mr-1.5">/</span>Pricing</a>
+                <a href="{{ route('home') }}#insights" class="hover:text-white transition-colors"><span class="text-slate-600 mr-1.5">/</span>Lab Notes</a>
             </nav>
 
             <div class="flex items-center gap-3">
                 <button
                     type="button"
                     onclick="window.c28OpenModal && window.c28OpenModal(@js($primaryCtaLabel))"
-                    class="btn-emerald text-obsidian-950 font-bold text-xs sm:text-sm px-5 py-2.5 rounded-full flex items-center gap-2"
+                    class="border border-white/15 bg-obsidian-900 hover:border-neon-accent/60 hover:text-neon-accent text-slate-200 font-mono text-xs px-4 py-2 rounded-[2px] transition-colors"
                 >
-                    <span>{{ $primaryCtaLabel }}</span>
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+                    {{ $primaryCtaLabel }}
                 </button>
 
                 <button
                     type="button"
                     onclick="window.c28ToggleMobileNav && window.c28ToggleMobileNav()"
                     aria-label="Toggle Mobile Navigation"
-                    class="lg:hidden p-2 rounded-lg border border-emerald-500/25 text-slate-300 hover:text-white"
+                    class="lg:hidden p-2 rounded-[2px] border border-white/15 text-slate-300 hover:text-white"
                 >
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
                 </button>
             </div>
+            </div>
         </div>
 
         <!-- Mobile Navigation Drawer -->
-        <div id="c28MobileNav" class="hidden lg:hidden bg-obsidian-950 border-t border-emerald-500/15 px-4 py-4 space-y-2 text-sm text-slate-300">
-            <a href="{{ route('home') }}#services" class="block py-2 hover:text-neon-400">Services</a>
-            <a href="{{ route('home') }}#blueprint" class="block py-2 hover:text-neon-400">10-Step Blueprint</a>
-            <a href="{{ route('home') }}#projects" class="block py-2 hover:text-neon-400">Case Studies &amp; Lab</a>
-            <a href="{{ route('home') }}#engagement" class="block py-2 hover:text-neon-400">Pricing &amp; Sprints</a>
-            <a href="{{ route('home') }}#insights" class="block py-2 hover:text-neon-400">Lab Notes</a>
-            <a href="{{ route('home') }}#faq" class="block py-2 hover:text-neon-400">FAQ</a>
+        <div id="c28MobileNav" class="hidden lg:hidden bg-obsidian-950 border-t border-white/10 px-4 py-4 space-y-2 text-xs font-mono uppercase tracking-wider text-slate-300">
+            <a href="{{ route('home') }}#services" class="block py-2 hover:text-neon-accent">/ Services</a>
+            <a href="{{ route('home') }}#blueprint" class="block py-2 hover:text-neon-accent">/ Blueprint</a>
+            <a href="{{ route('home') }}#projects" class="block py-2 hover:text-neon-accent">/ Projects</a>
+            <a href="{{ route('home') }}#engagement" class="block py-2 hover:text-neon-accent">/ Pricing</a>
+            <a href="{{ route('home') }}#insights" class="block py-2 hover:text-neon-accent">/ Lab Notes</a>
+            <a href="{{ route('home') }}#faq" class="block py-2 hover:text-neon-accent">/ FAQ</a>
         </div>
     </header>
 
@@ -106,7 +79,7 @@
 
     <!-- Footer with Giant Cropped Watermark -->
     <footer class="pt-16 bg-obsidian-950 border-t border-emerald-500/15 relative overflow-hidden">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="w-full px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-20">
             <div class="grid grid-cols-2 md:grid-cols-5 gap-8 pb-14 border-b border-emerald-500/10">
                 <div class="col-span-2">
                     <div class="flex items-center gap-3 mb-4">
