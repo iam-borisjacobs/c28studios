@@ -144,6 +144,7 @@ html.theme-light .bg-obsidian-950\/90,
 html.theme-light .bg-obsidian-950\/85,
 html.theme-light .bg-obsidian-950\/80,
 html.theme-light .bg-obsidian-950\/60,
+html.theme-light .bg-obsidian-950\/50,
 html.theme-light .bg-\[\#181818\],
 html.theme-light .bg-\[\#181818\]\/95,
 html.theme-light .bg-\[\#181818\]\/90 {
@@ -154,15 +155,35 @@ html.theme-light .bg-obsidian-900,
 html.theme-light .bg-obsidian-900\/95,
 html.theme-light .bg-obsidian-900\/90,
 html.theme-light .bg-obsidian-900\/50,
+html.theme-light .bg-obsidian-900\/40,
 html.theme-light .bg-obsidian-850,
 html.theme-light .bg-obsidian-800 {
-    background-color: #f1f5f9 !important;
+    background-color: #f8fafc !important;
 }
 
 html.theme-light .glass-card {
     background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
     border-color: rgba(15, 23, 42, 0.14);
-    box-shadow: 0 12px 32px -12px rgba(15, 23, 42, 0.1);
+    box-shadow: 0 12px 32px -12px rgba(15, 23, 42, 0.08);
+}
+
+html.theme-light .glass-card-highlight {
+    background: linear-gradient(180deg, #f0fdf4 0%, #ffffff 100%);
+    border-color: rgba(16, 185, 129, 0.45);
+    box-shadow: 0 16px 40px -12px rgba(16, 185, 129, 0.15);
+}
+
+html.theme-light .text-neon-400,
+html.theme-light .text-emerald-300 {
+    color: #059669 !important;
+}
+
+html.theme-light .text-cyan-300 {
+    color: #0284c7 !important;
+}
+
+html.theme-light .text-rose-400 {
+    color: #e11d48 !important;
 }
 
 html.theme-light .text-white,
@@ -197,10 +218,27 @@ html.theme-light .text-white\/25 {
     color: rgba(15, 23, 42, 0.45) !important;
 }
 
-/* Keep the Right Hero 3D Cube Telemetry Panel dark so neon green dots stay vibrant */
-html.theme-light .bg-hero-cube-grid {
-    background-color: #181818 !important;
+/* Hero EZGIF Blend Mode & Light-Mode Right Panel Adaptation */
+.hero-ezgif-media {
+    mix-blend-mode: lighten;
 }
+
+html.theme-light .hero-ezgif-media {
+    mix-blend-mode: normal;
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 7%, #000 93%, transparent 100%);
+    mask-image: linear-gradient(to right, transparent 0%, #000 7%, #000 93%, transparent 100%);
+}
+
+html.theme-light .bg-hero-cube-grid {
+    background-color: #D1DACF !important;
+    background-size: 56px 56px;
+    background-image:
+        linear-gradient(to right, rgba(15, 23, 42, 0.055) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(15, 23, 42, 0.055) 1px, transparent 1px);
+}
+
 html.theme-light .bg-hero-cube-grid .bg-\[\#181818\]\/90 {
-    background-color: rgba(24, 24, 24, 0.9) !important;
+    background-color: rgba(255, 255, 255, 0.92) !important;
+    border-color: rgba(15, 23, 42, 0.18) !important;
+    color: #0f172a !important;
 }

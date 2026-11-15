@@ -18,7 +18,7 @@
 @section('content')
     <!-- SECTION 01: ARCHITECTURAL HERO & EZGIF SYSTEM VISUALIZATION -->
     <section class="bg-[#181818] border-b border-white/15">
-        <div class="w-full px-4 sm:px-6 lg:px-10 xl:px-12">
+        <div class="w-full px-3 sm:px-6 lg:px-10 xl:px-12">
         <div class="w-full border-x border-white/15 relative">
             <!-- Top Intersection Crosshairs -->
             <span aria-hidden="true" class="hidden lg:block absolute -top-2.5 -left-1.5 font-mono text-xs text-white/40 select-none pointer-events-none">+</span>
@@ -75,22 +75,26 @@
 
                     <img
                         id="heroEzgifFallback"
-                        src="{{ asset('media/hero-frames/ezgif-frame-001.jpg') }}"
+                        src="{{ ($settings['theme.mode'] ?? 'dark') === 'light' ? asset('media/hero-frames-light/ezgif-frame-001.jpg') : asset('media/hero-frames/ezgif-frame-001.jpg') }}"
+                        data-src-dark="{{ asset('media/hero-frames/ezgif-frame-001.jpg') }}"
+                        data-src-light="{{ asset('media/hero-frames-light/ezgif-frame-001.jpg') }}"
                         alt="C28 Systems Operational 3D Telemetry Animation"
                         width="1086"
                         height="1078"
                         loading="eager"
                         decoding="async"
-                        class="w-full h-full max-h-[580px] object-contain object-center block mix-blend-lighten"
+                        class="w-full h-full max-h-[580px] object-contain object-center block hero-ezgif-media"
                     >
                     <canvas
                         id="heroEzgifCanvas"
                         width="1066"
                         height="1058"
                         data-base-url="{{ asset('media/hero-frames') }}"
+                        data-base-url-dark="{{ asset('media/hero-frames') }}"
+                        data-base-url-light="{{ asset('media/hero-frames-light') }}"
                         data-frame-count="235"
                         aria-label="C28 Systems Operational 3D Telemetry Animation"
-                        class="hidden w-full h-full max-h-[580px] object-contain object-center mix-blend-lighten"
+                        class="hidden w-full h-full max-h-[580px] object-contain object-center hero-ezgif-media"
                     ></canvas>
                 </div>
             </div>
@@ -427,7 +431,7 @@
 
     <!-- SECTION 05: INTERACTIVE 10-STEP PRODUCTION BLUEPRINT (#blueprint) -->
     @if(count($blueprintSteps) > 0)
-        <section id="blueprint" class="py-24 relative bg-obsidian-950/50 border-t border-emerald-500/15">
+        <section id="blueprint" class="py-24 relative bg-obsidian-950 border-t border-white/15">
             <div class="w-full px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-20">
                 <div class="text-center max-w-3xl mx-auto mb-14">
                     <span class="inline-block px-3.5 py-1 rounded-full text-xs font-mono uppercase tracking-widest text-neon-400 section-badge mb-4">
@@ -441,47 +445,47 @@
                     </p>
                 </div>
 
-                <div class="rounded-3xl p-6 sm:p-10 relative overflow-hidden border border-neon-400/35 bg-gradient-to-b from-emerald-950/40 via-obsidian-900/95 to-obsidian-950">
-                    <div class="relative z-10 max-w-5xl mx-auto">
-                        <div class="grid grid-cols-2 sm:grid-cols-5 gap-3 mb-8">
+                <div class="glass-card rounded-3xl p-6 sm:p-10 lg:p-12 relative overflow-hidden border border-emerald-500/25">
+                    <div class="relative z-10 w-full">
+                        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3.5 mb-8">
                             @foreach($blueprintSteps as $idx => $stepItem)
                                 <button
                                     type="button"
                                     onclick="window.c28SelectBlueprintStep && window.c28SelectBlueprintStep({{ $idx }})"
-                                    class="blueprint-node-btn px-3 py-2.5 rounded-xl text-left font-mono text-xs transition-all border {{ $idx === $activeBpIndex ? 'btn-emerald text-obsidian-950 font-bold border-neon-400 shadow-lg' : 'bg-obsidian-950/85 text-slate-300 border-emerald-500/20 hover:border-neon-400/50 hover:text-white' }}"
+                                    class="blueprint-node-btn px-4 py-3.5 rounded-xl text-left font-mono text-xs transition-all border {{ $idx === $activeBpIndex ? 'btn-emerald text-obsidian-950 font-bold border-neon-400 shadow-lg' : 'bg-obsidian-950/85 text-slate-300 border-emerald-500/20 hover:border-neon-400/50 hover:text-white' }}"
                                 >
-                                    <div class="text-[10px] opacity-75">STEP {{ data_get($stepItem, 'step', sprintf('%02d', $idx + 1)) }}</div>
-                                    <div class="truncate">{{ data_get($stepItem, 'short', data_get($stepItem, 'title')) }}</div>
+                                    <div class="text-[10px] opacity-75 mb-1">STEP {{ data_get($stepItem, 'step', sprintf('%02d', $idx + 1)) }}</div>
+                                    <div class="leading-snug font-semibold">{{ data_get($stepItem, 'short', data_get($stepItem, 'title')) }}</div>
                                 </button>
                             @endforeach
                         </div>
 
-                        <div class="glass-card rounded-2xl p-6 border border-emerald-500/30">
-                            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 mb-4 border-b border-emerald-500/15">
+                        <div class="rounded-2xl p-6 sm:p-8 bg-obsidian-900/90 border border-emerald-500/30">
+                            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-5 mb-6 border-b border-emerald-500/15">
                                 <div>
-                                    <span id="bpStepNumber" class="text-xs font-mono uppercase tracking-widest text-neon-400">
+                                    <span id="bpStepNumber" class="text-xs font-mono uppercase tracking-widest text-neon-400 block mb-1">
                                         STEP {{ data_get($activeBp, 'step', '01') }} OF {{ count($blueprintSteps) }} • {{ data_get($activeBp, 'category', 'ENGINEERING') }}
                                     </span>
-                                    <h3 id="bpStepTitle" class="text-xl font-bold text-white mt-0.5">
+                                    <h3 id="bpStepTitle" class="text-xl sm:text-2xl font-bold text-white">
                                         {{ data_get($activeBp, 'title') }}
                                     </h3>
                                 </div>
-                                <span id="bpStepDeliverable" class="text-xs font-mono px-3 py-1.5 rounded-lg bg-emerald-500/15 text-neon-400 border border-emerald-500/30 self-start md:self-center">
+                                <span id="bpStepDeliverable" class="text-xs font-mono px-3.5 py-1.5 rounded-lg bg-emerald-500/15 text-neon-400 border border-emerald-500/30 self-start md:self-center">
                                     {{ data_get($activeBp, 'deliverable') }}
                                 </span>
                             </div>
-                            <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
-                                <div class="md:col-span-7">
-                                    <p id="bpStepProblem" class="text-sm text-slate-300 leading-relaxed mb-3">
+                            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+                                <div class="lg:col-span-7 space-y-3">
+                                    <p id="bpStepProblem" class="text-sm sm:text-base text-slate-300 leading-relaxed">
                                         {{ data_get($activeBp, 'problem') }}
                                     </p>
-                                    <div id="bpStepOutcome" class="text-xs text-neon-400 font-medium">
+                                    <div id="bpStepOutcome" class="text-xs sm:text-sm text-neon-400 font-medium">
                                         &#10003; {{ data_get($activeBp, 'outcome') }}
                                     </div>
                                 </div>
-                                <div class="md:col-span-5 bg-obsidian-950/90 rounded-xl p-3.5 border border-emerald-500/20 font-mono text-[11px] text-slate-300">
-                                    <div class="text-slate-500 mb-1">// Verification Command</div>
-                                    <div id="bpStepCommand" class="text-neon-400">{{ data_get($activeBp, 'cmd') }}</div>
+                                <div class="lg:col-span-5 bg-obsidian-950 rounded-xl p-4 border border-emerald-500/25 font-mono text-xs text-slate-300">
+                                    <div class="text-slate-400 mb-1.5">// Verification Command</div>
+                                    <div id="bpStepCommand" class="text-neon-400 break-all">{{ data_get($activeBp, 'cmd') }}</div>
                                 </div>
                             </div>
                         </div>
@@ -528,14 +532,14 @@
                                     </a>
                                 </h3>
 
-                                <div class="space-y-2.5 text-xs text-slate-300 mb-5">
-                                    <div class="p-3 rounded-xl bg-obsidian-950/80 border border-emerald-500/15">
-                                        <span class="font-mono text-rose-400 uppercase block mb-0.5">Problem //</span>
-                                        {{ Str::limit($project->problem_summary, 130) }}
+                                <div class="space-y-3 text-xs sm:text-sm text-slate-300 mb-5">
+                                    <div class="p-3.5 rounded-xl bg-obsidian-950/80 border border-emerald-500/15 leading-relaxed">
+                                        <span class="font-mono text-rose-400 uppercase block mb-1 text-[11px]">Problem //</span>
+                                        {{ $project->problem_summary }}
                                     </div>
-                                    <div class="p-3 rounded-xl bg-obsidian-950/80 border border-emerald-500/20">
-                                        <span class="font-mono text-neon-400 uppercase block mb-0.5">C28 Solution //</span>
-                                        {{ Str::limit($project->solution_summary, 130) }}
+                                    <div class="p-3.5 rounded-xl bg-obsidian-950/80 border border-emerald-500/20 leading-relaxed">
+                                        <span class="font-mono text-neon-400 uppercase block mb-1 text-[11px]">C28 Solution //</span>
+                                        {{ $project->solution_summary }}
                                     </div>
                                 </div>
 
@@ -752,7 +756,7 @@
 
     <!-- SECTION 09: ENGINEERING WALKTHROUGHS & LAB NOTES (#insights) -->
     @if($posts->isNotEmpty())
-        <section id="insights" class="py-24 relative bg-obsidian-950/50 border-t border-emerald-500/15">
+        <section id="insights" class="py-24 relative bg-obsidian-950 border-t border-white/15">
             <div class="w-full px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-20">
                 <div class="text-center max-w-3xl mx-auto mb-16">
                     <span class="inline-block px-3.5 py-1 rounded-full text-xs font-mono uppercase tracking-widest text-neon-400 section-badge mb-4">
@@ -766,19 +770,19 @@
                     </p>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-7">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7">
                     @foreach($posts as $post)
-                        <article class="glass-card rounded-3xl overflow-hidden flex flex-col justify-between group border border-emerald-500/20">
+                        <article class="glass-card rounded-3xl overflow-hidden flex flex-col justify-between group border border-emerald-500/25">
                             <div>
-                                <div class="h-44 bg-gradient-to-br from-emerald-950 via-obsidian-900 to-obsidian-950 border-b border-emerald-500/20 p-5 flex flex-col justify-between">
-                                    <div class="flex items-center justify-between gap-2 text-[10px] font-mono">
-                                        <span class="text-neon-400 uppercase">{{ $post->categoryLabel() }}</span>
-                                        <span class="px-2 py-0.5 rounded {{ $post->isClientProduction() ? 'bg-emerald-500/20 text-neon-400' : 'bg-cyan-500/15 text-cyan-300' }}">
+                                <div class="bg-obsidian-900/90 border-b border-emerald-500/20 p-6 flex flex-col justify-between gap-4">
+                                    <div class="flex flex-wrap items-center justify-between gap-2 text-[11px] font-mono">
+                                        <span class="text-neon-400 font-semibold uppercase">{{ $post->categoryLabel() }}</span>
+                                        <span class="px-2.5 py-0.5 rounded-full {{ $post->isClientProduction() ? 'bg-emerald-500/20 text-neon-400 border border-emerald-500/30' : 'bg-cyan-500/15 text-cyan-300 border border-cyan-500/30' }}">
                                             {{ $post->workTypeLabel() }}
                                         </span>
                                     </div>
                                     @if(filled($post->hook_text))
-                                        <div class="my-auto p-3 rounded-xl bg-obsidian-950/90 border border-emerald-500/25 font-mono text-[11px] text-emerald-300 truncate">
+                                        <div class="p-3.5 rounded-xl bg-obsidian-950 border border-emerald-500/25 font-mono text-xs text-neon-400 leading-relaxed break-words">
                                             {{ $post->hook_text }}
                                         </div>
                                     @endif
@@ -787,19 +791,19 @@
                                     </div>
                                 </div>
 
-                                <div class="p-6">
-                                    <h3 class="text-lg font-bold text-white mb-2 group-hover:text-neon-400 transition-colors">
+                                <div class="p-6 sm:p-7">
+                                    <h3 class="text-lg sm:text-xl font-bold text-white mb-3 group-hover:text-neon-400 transition-colors leading-snug">
                                         <a href="{{ route('posts.show', $post->slug) }}">
                                             {{ $post->title }}
                                         </a>
                                     </h3>
-                                    <p class="text-xs sm:text-sm text-slate-400 leading-relaxed">
+                                    <p class="text-sm text-slate-300 leading-relaxed">
                                         {{ $post->excerpt }}
                                     </p>
                                 </div>
                             </div>
 
-                            <div class="px-6 pb-6">
+                            <div class="px-6 sm:px-7 pb-6 pt-2">
                                 <a href="{{ route('posts.show', $post->slug) }}" class="text-xs font-mono font-bold text-neon-400 hover:text-neon-accent flex items-center gap-1.5">
                                     <span>Read Walkthrough</span>
                                     <span>&rarr;</span>
@@ -814,7 +818,7 @@
 
     <!-- SECTION 10: TECHNICAL & ENGAGEMENT FAQ (#faq) -->
     @if($faqs->isNotEmpty())
-        <section id="faq" class="py-24 relative bg-obsidian-900/40 border-t border-emerald-500/15">
+        <section id="faq" class="py-24 relative bg-obsidian-900 border-t border-white/15">
             <div class="w-full px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-20">
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
                     <div class="lg:col-span-5">

@@ -58,67 +58,76 @@
 
     <!-- Architectural Navigation Header -->
     <header class="sticky top-0 z-50 bg-[#181818]/95 backdrop-blur-md border-b border-white/15">
-        <div class="w-full px-4 sm:px-6 lg:px-10 xl:px-12">
-            <div class="w-full px-4 sm:px-6 lg:px-10 h-16 flex items-center justify-between border-x border-white/15">
-            <a href="{{ route('home') }}" class="flex items-center gap-2.5 group" aria-label="{{ $brandName }} Home">
-                @if($logoTopUrl !== '')
-                    <img src="{{ $logoTopUrl }}" alt="{{ $brandName }} Logo" class="h-8 w-auto object-contain">
-                @else
-                    <div class="w-7 h-7 rounded-[2px] bg-neon-accent flex items-center justify-center text-obsidian-950 font-mono font-bold text-xs tracking-tighter">
-                        {{ $logoText }}
-                    </div>
-                @endif
-                <span class="text-white font-semibold text-base tracking-tight">{{ $brandName }}</span>
-            </a>
+        <div class="w-full px-3 sm:px-6 lg:px-10 xl:px-12">
+            <div class="w-full px-3.5 sm:px-6 lg:px-10 h-16 flex items-center justify-between gap-2 border-x border-white/15">
+                <a href="{{ route('home') }}" class="flex items-center gap-2 sm:gap-2.5 group min-w-0 shrink" aria-label="{{ $brandName }} Home">
+                    @if($logoTopUrl !== '')
+                        <img src="{{ $logoTopUrl }}" alt="{{ $brandName }} Logo" class="h-7 sm:h-8 w-auto object-contain shrink-0">
+                    @else
+                        <div class="w-7 h-7 rounded-[2px] bg-neon-accent flex items-center justify-center text-obsidian-950 font-mono font-bold text-xs tracking-tighter shrink-0">
+                            {{ $logoText }}
+                        </div>
+                    @endif
+                    <span class="text-white font-semibold text-sm sm:text-base tracking-tight truncate">{{ $brandName }}</span>
+                </a>
 
-            <nav class="hidden lg:flex items-center gap-7 text-[11px] font-mono uppercase tracking-[0.14em] text-slate-400" aria-label="Primary Navigation">
-                <a href="{{ route('home') }}#services" class="hover:text-white transition-colors"><span class="text-slate-600 mr-1.5">/</span>Services</a>
-                <a href="{{ route('home') }}#blueprint" class="hover:text-white transition-colors"><span class="text-slate-600 mr-1.5">/</span>Blueprint</a>
-                <a href="{{ route('home') }}#projects" class="hover:text-white transition-colors"><span class="text-slate-600 mr-1.5">/</span>Projects</a>
-                <a href="{{ route('home') }}#engagement" class="hover:text-white transition-colors"><span class="text-slate-600 mr-1.5">/</span>Pricing</a>
-                <a href="{{ route('home') }}#insights" class="hover:text-white transition-colors"><span class="text-slate-600 mr-1.5">/</span>Lab Notes</a>
-            </nav>
+                <nav class="hidden lg:flex items-center gap-7 text-[11px] font-mono uppercase tracking-[0.14em] text-slate-400" aria-label="Primary Navigation">
+                    <a href="{{ route('home') }}#services" class="hover:text-white transition-colors"><span class="text-slate-600 mr-1.5">/</span>Services</a>
+                    <a href="{{ route('home') }}#blueprint" class="hover:text-white transition-colors"><span class="text-slate-600 mr-1.5">/</span>Blueprint</a>
+                    <a href="{{ route('home') }}#projects" class="hover:text-white transition-colors"><span class="text-slate-600 mr-1.5">/</span>Projects</a>
+                    <a href="{{ route('home') }}#engagement" class="hover:text-white transition-colors"><span class="text-slate-600 mr-1.5">/</span>Pricing</a>
+                    <a href="{{ route('home') }}#insights" class="hover:text-white transition-colors"><span class="text-slate-600 mr-1.5">/</span>Lab Notes</a>
+                </nav>
 
-            <div class="flex items-center gap-2.5">
-                <button
-                    type="button"
-                    id="c28ThemeToggle"
-                    onclick="window.c28ToggleTheme && window.c28ToggleTheme()"
-                    aria-label="Toggle Dark or White Theme"
-                    title="Switch Theme (Dark / White)"
-                    class="border border-white/15 bg-obsidian-900 hover:border-neon-accent/60 hover:text-neon-accent text-slate-200 font-mono text-xs px-3 py-2 rounded-[2px] transition-colors flex items-center gap-1.5"
-                >
-                    <span id="c28ThemeToggleLabel">Theme</span>
-                </button>
+                <div class="flex items-center gap-2 shrink-0">
+                    <button
+                        type="button"
+                        id="c28ThemeToggle"
+                        onclick="window.c28ToggleTheme && window.c28ToggleTheme()"
+                        aria-label="Toggle Dark or White Theme"
+                        title="Switch Theme (Dark / White)"
+                        class="border border-white/15 bg-obsidian-900 hover:border-neon-accent/60 hover:text-neon-accent text-slate-200 font-mono text-[11px] sm:text-xs px-2.5 sm:px-3 py-2 rounded-[2px] transition-colors inline-flex items-center gap-1 whitespace-nowrap shrink-0"
+                    >
+                        <span id="c28ThemeToggleLabel">Theme</span>
+                    </button>
 
-                <button
-                    type="button"
-                    onclick="window.c28OpenModal && window.c28OpenModal(@js($primaryCtaLabel))"
-                    class="border border-white/15 bg-obsidian-900 hover:border-neon-accent/60 hover:text-neon-accent text-slate-200 font-mono text-xs px-4 py-2 rounded-[2px] transition-colors"
-                >
-                    {{ $primaryCtaLabel }}
-                </button>
+                    <button
+                        type="button"
+                        onclick="window.c28OpenModal && window.c28OpenModal(@js($primaryCtaLabel))"
+                        class="hidden sm:inline-flex items-center justify-center border border-white/15 bg-obsidian-900 hover:border-neon-accent/60 hover:text-neon-accent text-slate-200 font-mono text-xs px-4 py-2 rounded-[2px] transition-colors whitespace-nowrap shrink-0"
+                    >
+                        {{ $primaryCtaLabel }}
+                    </button>
 
-                <button
-                    type="button"
-                    onclick="window.c28ToggleMobileNav && window.c28ToggleMobileNav()"
-                    aria-label="Toggle Mobile Navigation"
-                    class="lg:hidden p-2 rounded-[2px] border border-white/15 text-slate-300 hover:text-white"
-                >
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
-                </button>
-            </div>
+                    <button
+                        type="button"
+                        onclick="window.c28ToggleMobileNav && window.c28ToggleMobileNav()"
+                        aria-label="Toggle Mobile Navigation"
+                        class="lg:hidden p-2 rounded-[2px] border border-white/15 bg-obsidian-900 text-slate-300 hover:text-white shrink-0"
+                    >
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
+                    </button>
+                </div>
             </div>
         </div>
 
         <!-- Mobile Navigation Drawer -->
-        <div id="c28MobileNav" class="hidden lg:hidden bg-obsidian-950 border-t border-white/10 px-4 py-4 space-y-2 text-xs font-mono uppercase tracking-wider text-slate-300">
-            <a href="{{ route('home') }}#services" class="block py-2 hover:text-neon-accent">/ Services</a>
-            <a href="{{ route('home') }}#blueprint" class="block py-2 hover:text-neon-accent">/ Blueprint</a>
-            <a href="{{ route('home') }}#projects" class="block py-2 hover:text-neon-accent">/ Projects</a>
-            <a href="{{ route('home') }}#engagement" class="block py-2 hover:text-neon-accent">/ Pricing</a>
-            <a href="{{ route('home') }}#insights" class="block py-2 hover:text-neon-accent">/ Lab Notes</a>
-            <a href="{{ route('home') }}#faq" class="block py-2 hover:text-neon-accent">/ FAQ</a>
+        <div id="c28MobileNav" class="hidden lg:hidden bg-obsidian-950 border-t border-white/15 px-5 py-4 space-y-2.5 text-xs font-mono uppercase tracking-wider text-slate-300">
+            <a href="{{ route('home') }}#services" onclick="window.c28ToggleMobileNav && window.c28ToggleMobileNav()" class="block py-2 hover:text-neon-accent">/ Services</a>
+            <a href="{{ route('home') }}#blueprint" onclick="window.c28ToggleMobileNav && window.c28ToggleMobileNav()" class="block py-2 hover:text-neon-accent">/ Blueprint</a>
+            <a href="{{ route('home') }}#projects" onclick="window.c28ToggleMobileNav && window.c28ToggleMobileNav()" class="block py-2 hover:text-neon-accent">/ Projects</a>
+            <a href="{{ route('home') }}#engagement" onclick="window.c28ToggleMobileNav && window.c28ToggleMobileNav()" class="block py-2 hover:text-neon-accent">/ Pricing</a>
+            <a href="{{ route('home') }}#insights" onclick="window.c28ToggleMobileNav && window.c28ToggleMobileNav()" class="block py-2 hover:text-neon-accent">/ Lab Notes</a>
+            <a href="{{ route('home') }}#faq" onclick="window.c28ToggleMobileNav && window.c28ToggleMobileNav()" class="block py-2 hover:text-neon-accent">/ FAQ</a>
+            <div class="pt-2 border-t border-white/10 sm:hidden">
+                <button
+                    type="button"
+                    onclick="window.c28ToggleMobileNav && window.c28ToggleMobileNav(); window.c28OpenModal && window.c28OpenModal(@js($primaryCtaLabel))"
+                    class="w-full py-3 bg-neon-accent text-obsidian-950 font-mono font-bold text-xs uppercase tracking-wider rounded-[2px]"
+                >
+                    {{ $primaryCtaLabel }}
+                </button>
+            </div>
         </div>
     </header>
 

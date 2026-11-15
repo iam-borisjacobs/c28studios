@@ -78,8 +78,8 @@ window.c28SelectBlueprintStep = function (index) {
     document.querySelectorAll(".blueprint-node-btn").forEach((btn, idx) => {
         btn.className =
             idx === index
-                ? "blueprint-node-btn px-3 py-2.5 rounded-xl text-left font-mono text-xs transition-all border btn-emerald text-obsidian-950 font-bold border-neon-400 shadow-lg"
-                : "blueprint-node-btn px-3 py-2.5 rounded-xl text-left font-mono text-xs transition-all border bg-obsidian-950/85 text-slate-300 border-emerald-500/20 hover:border-neon-400/50 hover:text-white";
+                ? "blueprint-node-btn px-4 py-3.5 rounded-xl text-left font-mono text-xs transition-all border btn-emerald text-obsidian-950 font-bold border-neon-400 shadow-lg"
+                : "blueprint-node-btn px-4 py-3.5 rounded-xl text-left font-mono text-xs transition-all border bg-obsidian-950/85 text-slate-300 border-emerald-500/20 hover:border-neon-400/50 hover:text-white";
     });
 
     const numEl = document.getElementById("bpStepNumber");
@@ -330,6 +330,9 @@ window.c28ToggleTheme = function () {
     } catch {}
 
     window.c28UpdateThemeButton();
+    if (window.c28SwitchHeroAnimationTheme) {
+        window.c28SwitchHeroAnimationTheme(nextMode);
+    }
 };
 
 // Bottom-to-Top ("Back to Top") Controller
@@ -363,28 +366,70 @@ window.addEventListener("keydown", (e) => {
     }
 });
 
-// Hero EZGIF Frame Sequence Player
+// Hero EZGIF Frame Sequence Player (Supports Dark & White/Light Theme Sequences)
 (function initHeroEzgifPlayer() {
     const canvas = document.getElementById("heroEzgifCanvas");
     const fallback = document.getElementById("heroEzgifFallback");
     if (!canvas) return;
 
-    const baseUrl = canvas.dataset.baseUrl;
+    const darkBaseUrl = canvas.dataset.baseUrlDark || canvas.dataset.baseUrl;
+    const lightBaseUrl = canvas.dataset.baseUrlLight || darkBaseUrl;
     const totalFrames = parseInt(canvas.dataset.frameCount || "235", 10);
-    if (!baseUrl || !totalFrames) return;
+    if (!darkBaseUrl || !totalFrames) return;
 
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    const frames = new Array(totalFrames);
+    const frameSets = {
+        dark: new Array(totalFrames),
+        light: new Array(totalFrames),
+    };
+    const loadedSets = {
+        dark: false,
+        light: false,
+    };
+
+    let activeTheme = document.documentElement.classList.contains("theme-light")
+        ? "light"
+        : "dark";
     let started = false;
     let currentFrame = 0;
     let lastTime = 0;
     const frameInterval = 1000 / 30; // 30 fps
 
-    function frameSrc(index) {
+    function frameSrc(baseUrl, index) {
         const num = String(index + 1).padStart(3, "0");
         return `${baseUrl}/ezgif-frame-${num}.jpg`;
+    }
+
+    function drawCroppedFrame(img) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.globalCompositeOperation = "source-over";
+        ctx.drawImage(
+            img,
+            10,
+            10,
+            img.naturalWidth - 20,
+            img.naturalHeight - 20,
+            0,
+            0,
+            canvas.width,
+            canvas.height,
+        );
+        if (activeTheme === "light") {
+            // Counter-balance the top-to-bottom brightness gradient in the source light frames
+            // so the entire canvas background normalizes to uniform #D1DACF from top to bottom
+            const grad = ctx.createLinearGradient(0, 0, 0, canvas.height);
+            grad.addColorStop(0.0, "#e7ece6");
+            grad.addColorStop(0.25, "#e5eae4");
+            grad.addColorStop(0.5, "#dee3dd");
+            grad.addColorStop(0.75, "#d6dcd5");
+            grad.addColorStop(1.0, "#d5dbd4");
+            ctx.globalCompositeOperation = "multiply";
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.globalCompositeOperation = "source-over";
+        }
     }
 
     function tick(timestamp) {
@@ -393,20 +438,10 @@ window.addEventListener("keydown", (e) => {
 
         if (elapsed >= frameInterval) {
             lastTime = timestamp - (elapsed % frameInterval);
-            const img = frames[currentFrame];
+            const currentSet = frameSets[activeTheme] || frameSets.dark;
+            const img = currentSet[currentFrame];
             if (img && img.complete && img.naturalWidth > 0) {
-                // Trim 10px edge border from source frame so #181818 blends seamlessly
-                ctx.drawImage(
-                    img,
-                    10,
-                    10,
-                    img.naturalWidth - 20,
-                    img.naturalHeight - 20,
-                    0,
-                    0,
-                    canvas.width,
-                    canvas.height,
-                );
+                drawCroppedFrame(img);
                 currentFrame = (currentFrame + 1) % totalFrames;
             }
         }
@@ -422,27 +457,54 @@ window.addEventListener("keydown", (e) => {
         window.requestAnimationFrame(tick);
     }
 
-    // Load frame 0 immediately and start playback, while preloading all remaining frames
-    for (let i = 0; i < totalFrames; i++) {
-        const img = new Image();
-        img.decoding = "async";
-        if (i === 0) {
-            img.onload = () => {
-                ctx.drawImage(
-                    img,
-                    10,
-                    10,
-                    img.naturalWidth - 20,
-                    img.naturalHeight - 20,
-                    0,
-                    0,
-                    canvas.width,
-                    canvas.height,
-                );
-                startPlayback();
-            };
+    function ensureThemeFramesLoaded(mode) {
+        const targetMode = mode === "light" ? "light" : "dark";
+        if (loadedSets[targetMode]) return;
+        loadedSets[targetMode] = true;
+
+        const baseUrl = targetMode === "light" ? lightBaseUrl : darkBaseUrl;
+        const set = frameSets[targetMode];
+
+        for (let i = 0; i < totalFrames; i++) {
+            const img = new Image();
+            img.decoding = "async";
+            if (i === 0) {
+                img.onload = () => {
+                    if (activeTheme === targetMode) {
+                        drawCroppedFrame(img);
+                        startPlayback();
+                    }
+                };
+            }
+            img.src = frameSrc(baseUrl, i);
+            set[i] = img;
         }
-        img.src = frameSrc(i);
-        frames[i] = img;
     }
+
+    window.c28SwitchHeroAnimationTheme = function (mode) {
+        activeTheme = mode === "light" ? "light" : "dark";
+        if (fallback) {
+            const fallbackSrc =
+                activeTheme === "light"
+                    ? fallback.dataset.srcLight
+                    : fallback.dataset.srcDark;
+            if (fallbackSrc) fallback.src = fallbackSrc;
+        }
+        ensureThemeFramesLoaded(activeTheme);
+        const set = frameSets[activeTheme];
+        const immediateImg = set[currentFrame] || set[0];
+        if (immediateImg && immediateImg.complete && immediateImg.naturalWidth > 0) {
+            drawCroppedFrame(immediateImg);
+        }
+    };
+
+    // Initialize fallback image and preload active theme sequence immediately
+    if (fallback) {
+        const initialFallback =
+            activeTheme === "light"
+                ? fallback.dataset.srcLight
+                : fallback.dataset.srcDark;
+        if (initialFallback) fallback.src = initialFallback;
+    }
+    ensureThemeFramesLoaded(activeTheme);
 })();

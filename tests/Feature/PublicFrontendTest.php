@@ -96,6 +96,7 @@ class PublicFrontendTest extends TestCase
 
         $response->assertStatus(200);
         $response->assertSee('media/hero-frames/ezgif-frame-001.jpg');
+        $response->assertSee('media/hero-frames-light/ezgif-frame-001.jpg');
         $response->assertSee('heroEzgifCanvas');
         $response->assertSee('data-frame-count="235"', false);
         $response->assertSee('ALL SYSTEMS OPERATIONAL');
