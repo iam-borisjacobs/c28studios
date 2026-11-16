@@ -1,6 +1,71 @@
 @extends('layouts.app')
 
-@section('title', $project->title . ' | ' . ($settings['brand.name'] ?? 'C28 — Software & Cloud Engineering'))
+@php
+    $brandName = $settings['brand.name'] ?? 'C28 — Software & Cloud Engineering';
+    $projectMetaDesc = Str::limit(trim($project->solution_summary . ' ' . $project->problem_summary), 160);
+    $projectUrl = route('projects.show', $project->slug);
+    $safeUrl = static function (?string $url): ?string {
+        $u = trim((string) $url);
+        if ($u === '') {
+            return null;
+        }
+        return (str_starts_with($u, 'http://') || str_starts_with($u, 'https://') || str_starts_with($u, '/')) ? $u : null;
+    };
+    $safeRepoUrl = $safeUrl($project->repo_url);
+    $safeLiveUrl = $safeUrl($project->live_url);
+
+    $projectSchema = [
+        '@context' => 'https://schema.org',
+        '@type' => 'TechArticle',
+        'headline' => $project->title,
+        'description' => $project->solution_summary,
+        'url' => $projectUrl,
+        'author' => [
+            '@type' => 'Organization',
+            'name' => $brandName,
+        ],
+        'publisher' => [
+            '@type' => 'Organization',
+            'name' => $brandName,
+        ],
+        'keywords' => is_array($project->tech_stack) ? implode(', ', $project->tech_stack) : '',
+    ];
+
+    $breadcrumbSchema = [
+        '@context' => 'https://schema.org',
+        '@type' => 'BreadcrumbList',
+        'itemListElement' => [
+            [
+                '@type' => 'ListItem',
+                'position' => 1,
+                'name' => 'Home',
+                'item' => route('home'),
+            ],
+            [
+                '@type' => 'ListItem',
+                'position' => 2,
+                'name' => 'Projects & Lab',
+                'item' => route('home') . '#projects',
+            ],
+            [
+                '@type' => 'ListItem',
+                'position' => 3,
+                'name' => $project->title,
+                'item' => $projectUrl,
+            ],
+        ],
+    ];
+@endphp
+
+@section('title', $project->title . ' | ' . $brandName)
+@section('meta_description', $projectMetaDesc)
+@section('canonical_url', $projectUrl)
+@section('og_type', 'article')
+
+@push('structured_data')
+    <script type="application/ld+json">{!! json_encode($projectSchema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) !!}</script>
+    <script type="application/ld+json">{!! json_encode($breadcrumbSchema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) !!}</script>
+@endpush
 
 @section('content')
     <section class="py-16 lg:py-24 relative">
@@ -58,14 +123,14 @@
                         Request Similar Architecture &rarr;
                     </button>
 
-                    @if(filled($project->repo_url))
-                        <a href="{{ $project->repo_url }}" target="_blank" rel="noopener" class="px-5 py-3 rounded-full text-xs font-mono text-slate-200 hover:text-neon-400 border border-emerald-500/30 bg-obsidian-950/80 transition">
+                    @if($safeRepoUrl)
+                        <a href="{{ $safeRepoUrl }}" target="_blank" rel="noopener noreferrer" class="px-5 py-3 rounded-full text-xs font-mono text-slate-200 hover:text-neon-400 border border-emerald-500/30 bg-obsidian-950/80 transition">
                             Inspect Repository &nearr;
                         </a>
                     @endif
 
-                    @if(filled($project->live_url))
-                        <a href="{{ $project->live_url }}" target="_blank" rel="noopener" class="px-5 py-3 rounded-full text-xs font-mono text-neon-400 border border-emerald-500/30 bg-obsidian-950/80 transition">
+                    @if($safeLiveUrl)
+                        <a href="{{ $safeLiveUrl }}" target="_blank" rel="noopener noreferrer" class="px-5 py-3 rounded-full text-xs font-mono text-neon-400 border border-emerald-500/30 bg-obsidian-950/80 transition">
                             Live Deployment &nearr;
                         </a>
                     @endif

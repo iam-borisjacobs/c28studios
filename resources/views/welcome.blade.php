@@ -13,7 +13,82 @@
     $activeBp = $blueprintSteps[$activeBpIndex] ?? ($blueprintSteps[0] ?? []);
     $scenarios = (array) ($settings['scenarios.items'] ?? []);
     $firstArtifact = $codeArtifacts[0] ?? ['title' => '.github/workflows/deploy-production.yml', 'code' => ''];
+
+    $seoBrandName = (string) ($settings['brand.name'] ?? 'C28 — Software & Cloud Engineering');
+    $seoEmail = (string) ($settings['contact.email'] ?? 'contact@c28studios.dev');
+    $seoPhone = (string) ($settings['contact.phone'] ?? '803 3880 229');
+    $seoSiteUrl = rtrim((string) config('app.url', 'https://www.c28studios.dev'), '/');
+
+    $serviceCatalogItems = $services->map(fn ($s) => [
+        '@type' => 'Offer',
+        'itemOffered' => [
+            '@type' => 'Service',
+            'name' => $s->title,
+            'description' => $s->short_outcome,
+        ],
+    ])->values()->all();
+
+    $organizationSchema = [
+        '@context' => 'https://schema.org',
+        '@type' => 'ProfessionalService',
+        '@id' => $seoSiteUrl . '/#organization',
+        'name' => $seoBrandName,
+        'alternateName' => 'C28 Studios',
+        'description' => $brandStatement . ' ' . $heroSubheadline,
+        'url' => $seoSiteUrl,
+        'email' => $seoEmail,
+        'telephone' => $seoPhone,
+        'priceRange' => '$$',
+        'knowsAbout' => [
+            'DevOps & Cloud Engineering',
+            'CI/CD Pipelines (GitHub Actions)',
+            'Docker Containerization',
+            'Linux Server Configuration & Hardening',
+            'Nginx Reverse Proxy & TLS 1.3 HTTPS',
+            'DevSecOps Integration & Trivy Vulnerability Scanning',
+            'Multi-Tenant SaaS Software Development',
+            'High-Conversion Website Development & Technical SEO',
+        ],
+        'hasOfferCatalog' => [
+            '@type' => 'OfferCatalog',
+            'name' => 'C28 4-Tier Software & Cloud Engineering Services',
+            'itemListElement' => $serviceCatalogItems,
+        ],
+    ];
+
+    $websiteSchema = [
+        '@context' => 'https://schema.org',
+        '@type' => 'WebSite',
+        '@id' => $seoSiteUrl . '/#website',
+        'url' => $seoSiteUrl,
+        'name' => $seoBrandName,
+        'description' => $brandStatement,
+        'publisher' => [
+            '@id' => $seoSiteUrl . '/#organization',
+        ],
+    ];
+
+    $faqSchema = $faqs->isNotEmpty() ? [
+        '@context' => 'https://schema.org',
+        '@type' => 'FAQPage',
+        'mainEntity' => $faqs->map(fn ($faq) => [
+            '@type' => 'Question',
+            'name' => $faq->question,
+            'acceptedAnswer' => [
+                '@type' => 'Answer',
+                'text' => $faq->answer,
+            ],
+        ])->values()->all(),
+    ] : null;
 @endphp
+
+@push('structured_data')
+    <script type="application/ld+json">{!! json_encode($organizationSchema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) !!}</script>
+    <script type="application/ld+json">{!! json_encode($websiteSchema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) !!}</script>
+    @if($faqSchema)
+        <script type="application/ld+json">{!! json_encode($faqSchema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) !!}</script>
+    @endif
+@endpush
 
 @section('content')
     <!-- SECTION 01: ARCHITECTURAL HERO & EZGIF SYSTEM VISUALIZATION -->

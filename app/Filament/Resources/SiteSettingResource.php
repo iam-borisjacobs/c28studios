@@ -40,6 +40,7 @@ class SiteSettingResource extends Resource
                             ->label('Setting Key (e.g. hero.headline)')
                             ->required()
                             ->maxLength(120)
+                            ->regex('/^[a-zA-Z0-9._\-]+$/')
                             ->unique(ignoreRecord: true)
                             ->extraInputAttributes(['class' => 'font-mono text-xs']),
 
@@ -80,8 +81,9 @@ class SiteSettingResource extends Resource
                             ->columnSpanFull(),
 
                         FileUpload::make('value')
-                            ->label('Upload Image (Logo / Brand Asset)')
+                            ->label('Upload Image (PNG, JPG, WebP — Max 2MB)')
                             ->image()
+                            ->acceptedFileTypes(['image/png', 'image/jpeg', 'image/webp'])
                             ->disk('public')
                             ->directory('branding')
                             ->maxSize(2048)

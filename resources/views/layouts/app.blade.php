@@ -25,7 +25,12 @@
     $contactWebsiteHref = (str_starts_with($contactWebsite, 'http://') || str_starts_with($contactWebsite, 'https://'))
         ? $contactWebsite
         : 'https://' . ltrim($contactWebsite, '/');
-    $githubUrl = $settings['social.github_url'] ?? 'https://github.com/iam-borisjacobs/c28studios';
+    $rawGithubUrl = trim((string) ($settings['social.github_url'] ?? 'https://github.com/iam-borisjacobs/c28studios'));
+    $githubUrl = (str_starts_with($rawGithubUrl, 'http://') || str_starts_with($rawGithubUrl, 'https://'))
+        ? $rawGithubUrl
+        : 'https://github.com/iam-borisjacobs/c28studios';
+    $defaultMetaDescription = $brandStatement . ' Partner with C28 for DevOps & Cloud Engineering, DevSecOps Integration, SaaS Software Development, and high-conversion Website Development.';
+    $defaultOgImage = $logoTopUrl !== '' ? $logoTopUrl : asset('media/hero-frames/ezgif-frame-001.jpg');
 @endphp
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" data-default-theme="{{ $defaultTheme }}" class="scroll-smooth {{ $defaultTheme === 'light' ? 'theme-light' : 'dark' }}">
@@ -35,6 +40,28 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="author" content="C28 — Software & Cloud Engineering">
     <title>@yield('title', $brandName . ' | Deploy, Secure & Operate Reliably')</title>
+    <meta name="description" content="@yield('meta_description', $defaultMetaDescription)">
+    <meta name="keywords" content="@yield('meta_keywords', 'C28 Studios, C28 Software and Cloud Engineering, DevOps Engineering, Cloud Engineering, CI/CD Pipelines, GitHub Actions, Docker Containerization, DevSecOps Integration, Trivy Security Scanning, Linux Server Hardening, Nginx Reverse Proxy, SaaS Software Development, Website Development, Technical SEO')">
+    <meta name="robots" content="@yield('meta_robots', 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1')">
+    <link rel="canonical" href="@yield('canonical_url', url()->current())">
+    <link rel="alternate" type="text/markdown" href="{{ url('/llms.txt') }}" title="{{ $brandName }} — AI &amp; LLM Discovery Summary">
+
+    <!-- OpenGraph Metadata for Social & AI Previews -->
+    <meta property="og:type" content="@yield('og_type', 'website')">
+    <meta property="og:site_name" content="{{ $brandName }}">
+    <meta property="og:title" content="@yield('title', $brandName . ' | Deploy, Secure & Operate Reliably')">
+    <meta property="og:description" content="@yield('meta_description', $defaultMetaDescription)">
+    <meta property="og:url" content="@yield('canonical_url', url()->current())">
+    <meta property="og:image" content="@yield('og_image', $defaultOgImage)">
+    <meta property="og:locale" content="en_US">
+
+    <!-- Twitter / X Card Metadata -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="@yield('title', $brandName . ' | Deploy, Secure & Operate Reliably')">
+    <meta name="twitter:description" content="@yield('meta_description', $defaultMetaDescription)">
+    <meta name="twitter:image" content="@yield('og_image', $defaultOgImage)">
+
+    @stack('structured_data')
 
     <script>
         (function () {

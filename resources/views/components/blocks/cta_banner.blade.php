@@ -4,7 +4,10 @@
     $heading = data_get($data, 'heading', 'Ready to Deploy & Operate Reliably?');
     $subtext = data_get($data, 'subtext');
     $buttonLabel = data_get($data, 'button_label', 'Book a Consultation');
-    $buttonUrl = data_get($data, 'button_url', '#consultation');
+    $rawButtonUrl = trim((string) data_get($data, 'button_url', '#consultation'));
+    $buttonUrl = (str_starts_with($rawButtonUrl, 'http://') || str_starts_with($rawButtonUrl, 'https://') || str_starts_with($rawButtonUrl, '/') || str_starts_with($rawButtonUrl, '#'))
+        ? $rawButtonUrl
+        : '#consultation';
 @endphp
 
 <div class="glass-card-highlight rounded-3xl p-8 sm:p-10 text-center border border-neon-400/40">

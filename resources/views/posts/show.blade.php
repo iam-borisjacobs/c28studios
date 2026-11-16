@@ -1,6 +1,64 @@
 @extends('layouts.app')
 
-@section('title', $post->title . ' | ' . ($settings['brand.name'] ?? 'C28 — Software & Cloud Engineering'))
+@php
+    $brandName = $settings['brand.name'] ?? 'C28 — Software & Cloud Engineering';
+    $postMetaDesc = Str::limit(trim((string) $post->excerpt), 160);
+    $postUrl = route('posts.show', $post->slug);
+
+    $postSchema = [
+        '@context' => 'https://schema.org',
+        '@type' => 'TechArticle',
+        'headline' => $post->title,
+        'description' => $post->excerpt,
+        'url' => $postUrl,
+        'datePublished' => ($post->published_at ?? $post->created_at ?? now())->toAtomString(),
+        'dateModified' => ($post->updated_at ?? $post->published_at ?? now())->toAtomString(),
+        'articleSection' => $post->categoryLabel(),
+        'author' => [
+            '@type' => 'Organization',
+            'name' => $brandName,
+        ],
+        'publisher' => [
+            '@type' => 'Organization',
+            'name' => $brandName,
+        ],
+    ];
+
+    $breadcrumbSchema = [
+        '@context' => 'https://schema.org',
+        '@type' => 'BreadcrumbList',
+        'itemListElement' => [
+            [
+                '@type' => 'ListItem',
+                'position' => 1,
+                'name' => 'Home',
+                'item' => route('home'),
+            ],
+            [
+                '@type' => 'ListItem',
+                'position' => 2,
+                'name' => 'Engineering Walkthroughs',
+                'item' => route('home') . '#insights',
+            ],
+            [
+                '@type' => 'ListItem',
+                'position' => 3,
+                'name' => $post->title,
+                'item' => $postUrl,
+            ],
+        ],
+    ];
+@endphp
+
+@section('title', $post->title . ' | ' . $brandName)
+@section('meta_description', $postMetaDesc)
+@section('canonical_url', $postUrl)
+@section('og_type', 'article')
+
+@push('structured_data')
+    <script type="application/ld+json">{!! json_encode($postSchema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) !!}</script>
+    <script type="application/ld+json">{!! json_encode($breadcrumbSchema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) !!}</script>
+@endpush
 
 @section('content')
     <article class="py-16 lg:py-24 relative">

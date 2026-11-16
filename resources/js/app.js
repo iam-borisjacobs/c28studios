@@ -291,15 +291,21 @@ window.c28SubmitModal = async function (event) {
                     "Unable to submit inquiry. Please check your inputs and try again.",
                 );
             }
-            errorsBox.innerHTML = messages
-                .map((m) => `<div>&bull; ${m}</div>`)
-                .join("");
+            errorsBox.textContent = "";
+            messages.forEach((m) => {
+                const row = document.createElement("div");
+                row.textContent = `• ${String(m)}`;
+                errorsBox.appendChild(row);
+            });
             errorsBox.classList.remove("hidden");
         }
     } catch {
         if (errorsBox) {
-            errorsBox.innerHTML =
-                "<div>&bull; Network error occurred. Please try again or email contact@c28studios.dev.</div>";
+            errorsBox.textContent = "";
+            const row = document.createElement("div");
+            row.textContent =
+                "• Network error occurred. Please try again or email contact@c28studios.dev.";
+            errorsBox.appendChild(row);
             errorsBox.classList.remove("hidden");
         }
     } finally {
