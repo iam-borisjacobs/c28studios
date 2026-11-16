@@ -323,7 +323,7 @@
                         <h3 class="text-2xl sm:text-3xl font-extrabold text-white leading-tight mb-4">
                             One Cohesive Partner From Code to Cloud
                         </h3>
-                        <p class="text-sm text-slate-200/90 leading-relaxed mb-6">
+                        <p class="text-sm text-slate-200 leading-relaxed mb-6">
                             Work directly with an engineering studio that bridges full-stack application development with the Linux, Docker, Nginx, and CI/CD infrastructure required to operate reliably in production.
                         </p>
                         <ul class="space-y-2.5 text-xs text-slate-200 mb-8 font-mono">
@@ -376,11 +376,11 @@
     </section>
 
     <!-- SECTION 04: PRODUCTION CODE ARTIFACT INSPECTOR -->
-    <section id="capabilities" class="py-24 relative">
+    <section id="capabilities" class="py-16 sm:py-24 relative">
         <div class="w-full px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-20">
-            <div class="glass-card rounded-3xl p-6 sm:p-10 relative overflow-hidden">
-                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-                    <div class="lg:col-span-5 space-y-5">
+            <div class="glass-card rounded-2xl sm:rounded-3xl p-4 sm:p-8 lg:p-10 relative overflow-hidden">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-center">
+                    <div class="lg:col-span-5 min-w-0 space-y-4 sm:space-y-5">
                         <div class="inline-flex items-center gap-2 text-xs font-mono text-neon-400">
                             <span class="w-2 h-2 rounded-full bg-neon-400"></span>
                             VERIFIABLE PRODUCTION ARTIFACTS
@@ -391,37 +391,59 @@
                         <p class="text-sm sm:text-base text-slate-300 leading-relaxed">
                             Inspect the actual multi-stage Dockerfiles, GitHub Actions CI/CD pipelines with Trivy vulnerability gates, and hardened Nginx TLS 1.3 configurations we implement for production systems.
                         </p>
-                        <div class="pt-2 flex flex-wrap items-center gap-3">
+                        <div class="pt-1 sm:pt-2 flex flex-wrap items-center gap-3">
                             <button
                                 type="button"
                                 onclick="window.c28OpenModal && window.c28OpenModal('CI/CD & Deployment Automation')"
-                                class="btn-emerald text-obsidian-950 font-bold text-xs sm:text-sm px-5 py-2.5 rounded-full"
+                                class="btn-emerald text-obsidian-950 font-bold text-xs sm:text-sm px-5 py-2.5 rounded-full w-full sm:w-auto text-center justify-center"
                             >
                                 Automate Your Releases
                             </button>
                         </div>
                     </div>
 
-                    <div class="lg:col-span-7">
+                    <div class="lg:col-span-7 min-w-0">
                         <div class="rounded-2xl bg-obsidian-950/95 border border-neon-400/40 shadow-[0_0_40px_-10px_rgba(16,185,129,0.3)] overflow-hidden">
-                            <div class="px-4 py-3 bg-emerald-950/40 border-b border-emerald-500/20 flex flex-wrap items-center justify-between gap-2">
-                                <div class="flex items-center gap-2">
-                                    <span class="w-2.5 h-2.5 rounded-full bg-neon-400"></span>
-                                    <span id="codeFileTitle" class="text-xs font-mono text-neon-400 font-semibold">{{ data_get($firstArtifact, 'title') }}</span>
+                            <!-- Top Window Title & Copy Bar -->
+                            <div class="px-3.5 sm:px-4 py-2.5 sm:py-3 bg-emerald-950/40 border-b border-emerald-500/20 flex items-center justify-between gap-2">
+                                <div class="flex items-center gap-2 min-w-0">
+                                    <div class="flex items-center gap-1.5 shrink-0">
+                                        <span class="w-2.5 h-2.5 rounded-full bg-rose-500/80"></span>
+                                        <span class="w-2.5 h-2.5 rounded-full bg-amber-400/80"></span>
+                                        <span class="w-2.5 h-2.5 rounded-full bg-neon-400"></span>
+                                    </div>
+                                    <span id="codeFileTitle" class="text-[11px] sm:text-xs font-mono text-neon-400 font-semibold truncate ml-1">{{ data_get($firstArtifact, 'title') }}</span>
                                 </div>
-                                <div class="flex flex-wrap gap-1.5">
-                                    @foreach($codeArtifacts as $idx => $artifact)
-                                        <button
-                                            type="button"
-                                            onclick="window.c28SelectArtifact && window.c28SelectArtifact({{ $idx }})"
-                                            class="snippet-btn text-[11px] font-mono px-2.5 py-1 rounded {{ $idx === 0 ? 'bg-emerald-500/20 text-neon-400 border border-emerald-500/30' : 'text-slate-400 hover:text-white' }}"
-                                        >
-                                            {{ data_get($artifact, 'title') }}
-                                        </button>
-                                    @endforeach
-                                </div>
+                                <button
+                                    id="codeCopyBtn"
+                                    type="button"
+                                    onclick="window.c28CopyCode && window.c28CopyCode(this)"
+                                    data-code="{{ data_get($firstArtifact, 'code') }}"
+                                    class="shrink-0 text-[11px] font-mono px-2.5 py-1 rounded-md bg-emerald-500/15 hover:bg-emerald-500/25 text-neon-400 border border-emerald-500/30 transition"
+                                >
+                                    Copy
+                                </button>
                             </div>
-                            <pre class="p-5 text-xs font-mono text-slate-200 overflow-x-auto leading-relaxed"><code id="codeBlockContent">{{ data_get($firstArtifact, 'code') }}</code></pre>
+
+                            <!-- Scrollable Artifact File Switcher Tabs -->
+                            <div class="px-3 sm:px-4 py-2 bg-obsidian-900/80 border-b border-emerald-500/15 flex items-center gap-1.5 overflow-x-auto">
+                                @foreach($codeArtifacts as $idx => $artifact)
+                                    @php
+                                        $fullTitle = (string) data_get($artifact, 'title', 'artifact');
+                                        $shortTitle = basename(str_replace('\\', '/', $fullTitle));
+                                    @endphp
+                                    <button
+                                        type="button"
+                                        onclick="window.c28SelectArtifact && window.c28SelectArtifact({{ $idx }})"
+                                        class="snippet-btn whitespace-nowrap shrink-0 text-[11px] font-mono px-2.5 sm:px-3 py-1.5 rounded-lg transition {{ $idx === 0 ? 'bg-emerald-500/20 text-neon-400 border border-emerald-500/30 font-semibold' : 'text-slate-400 hover:text-white border border-transparent' }}"
+                                    >
+                                        <span class="sm:hidden">{{ $shortTitle }}</span>
+                                        <span class="hidden sm:inline">{{ $fullTitle }}</span>
+                                    </button>
+                                @endforeach
+                            </div>
+
+                            <pre class="p-3.5 sm:p-5 text-[11px] sm:text-xs font-mono text-slate-200 overflow-x-auto leading-relaxed max-w-full"><code id="codeBlockContent">{{ data_get($firstArtifact, 'code') }}</code></pre>
                         </div>
                     </div>
                 </div>
@@ -907,8 +929,10 @@
                         </div>
                     </div>
 
-                    <div class="font-mono text-xs text-slate-400">
-                        Direct Studio Channel: <span class="text-neon-400">{{ $settings['contact.email'] ?? 'engineering@c28studios.com' }}</span>
+                    <div class="space-y-1.5 font-mono text-xs text-slate-400">
+                        <div>Direct Studio Email: <a href="mailto:{{ $settings['contact.email'] ?? 'contact@c28studios.dev' }}" class="text-neon-400 hover:underline">{{ $settings['contact.email'] ?? 'contact@c28studios.dev' }}</a></div>
+                        <div>Direct Studio Phone: <a href="tel:{{ preg_replace('/\s+/', '', $settings['contact.phone'] ?? '803 3880 229') }}" class="text-neon-400 hover:underline">{{ $settings['contact.phone'] ?? '803 3880 229' }}</a></div>
+                        <div>Official Website: <a href="https://{{ ltrim($settings['contact.website'] ?? 'www.c28studios.dev', 'https://') }}" target="_blank" rel="noopener" class="text-neon-400 hover:underline">{{ $settings['contact.website'] ?? 'www.c28studios.dev' }}</a></div>
                     </div>
                 </div>
 
@@ -933,7 +957,7 @@
                             </div>
                         @endif
 
-                        <form method="POST" action="{{ route('inquiries.store') }}" class="space-y-4">
+                        <form method="POST" action="{{ route('inquiries.store', [], false) }}" class="space-y-4">
                             @csrf
 
                             <!-- Honeypot anti-spam trap -->
@@ -960,11 +984,11 @@
                                 </div>
                                 <div>
                                     <label for="inquiry_service_interest" class="block text-xs font-mono uppercase text-slate-300 mb-1.5">Primary Engineering Service *</label>
-                                    <select id="inquiry_service_interest" name="service_interest" required class="w-full px-4 py-2.5 rounded-xl bg-obsidian-950 border border-emerald-500/25 text-sm text-white focus:outline-none focus:border-neon-400">
-                                        <option value="DevOps & Cloud Engineering" @selected(old('service_interest') === 'DevOps & Cloud Engineering')>01 • DevOps &amp; Cloud Engineering</option>
-                                        <option value="DevSecOps Integration" @selected(old('service_interest') === 'DevSecOps Integration')>02 • DevSecOps Integration</option>
-                                        <option value="Software Development" @selected(old('service_interest') === 'Software Development')>03 • Software Development</option>
-                                        <option value="Website Development" @selected(old('service_interest') === 'Website Development')>04 • Website Development</option>
+                                    <select id="inquiry_service_interest" name="service_interest" required class="c28-select w-full px-4 py-2.5 rounded-xl bg-obsidian-950 border border-emerald-500/25 text-sm text-white focus:outline-none focus:border-neon-400">
+                                        <option value="DevOps & Cloud Engineering" data-subtitle="CI/CD, Docker, Linux &amp; Cloud Setup" @selected(old('service_interest') === 'DevOps & Cloud Engineering')>01 • DevOps &amp; Cloud Engineering</option>
+                                        <option value="DevSecOps Integration" data-subtitle="Trivy Scanning, Secrets &amp; Security Gates" @selected(old('service_interest') === 'DevSecOps Integration')>02 • DevSecOps Integration</option>
+                                        <option value="Software Development" data-subtitle="SaaS, Web Apps, APIs &amp; Dashboards" @selected(old('service_interest') === 'Software Development')>03 • Software Development</option>
+                                        <option value="Website Development" data-subtitle="Landing Pages, Business Sites &amp; Technical SEO" @selected(old('service_interest') === 'Website Development')>04 • Website Development</option>
                                     </select>
                                 </div>
                             </div>
@@ -972,26 +996,26 @@
                             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                                 <div>
                                     <label for="inquiry_engagement_mode" class="block text-xs font-mono uppercase text-slate-300 mb-1.5">Engagement Model</label>
-                                    <select id="inquiry_engagement_mode" name="engagement_mode" class="w-full px-4 py-2.5 rounded-xl bg-obsidian-950 border border-emerald-500/25 text-sm text-white focus:outline-none focus:border-neon-400">
-                                        <option value="sprint_fixed" @selected(old('engagement_mode', 'sprint_fixed') === 'sprint_fixed')>Fixed-Scope Sprint</option>
-                                        <option value="monthly_retainer" @selected(old('engagement_mode') === 'monthly_retainer')>Monthly Retainer</option>
-                                        <option value="architecture_review" @selected(old('engagement_mode') === 'architecture_review')>Architecture Review</option>
+                                    <select id="inquiry_engagement_mode" name="engagement_mode" class="c28-select w-full px-4 py-2.5 rounded-xl bg-obsidian-950 border border-emerald-500/25 text-sm text-white focus:outline-none focus:border-neon-400">
+                                        <option value="sprint_fixed" data-subtitle="Defined deliverables &amp; milestone timeline" @selected(old('engagement_mode', 'sprint_fixed') === 'sprint_fixed')>Fixed-Scope Sprint</option>
+                                        <option value="monthly_retainer" data-subtitle="Ongoing DevOps, security &amp; feature velocity" @selected(old('engagement_mode') === 'monthly_retainer')>Monthly Retainer</option>
+                                        <option value="architecture_review" data-subtitle="Repository, server &amp; pipeline audit" @selected(old('engagement_mode') === 'architecture_review')>Architecture Review</option>
                                     </select>
                                 </div>
                                 <div>
                                     <label for="inquiry_budget_range" class="block text-xs font-mono uppercase text-slate-300 mb-1.5">Target Budget</label>
-                                    <select id="inquiry_budget_range" name="budget_range" class="w-full px-4 py-2.5 rounded-xl bg-obsidian-950 border border-emerald-500/25 text-sm text-white focus:outline-none focus:border-neon-400">
-                                        <option value="$1,200 – $2,500">$1,200 – $2,500 (Launch / Pipeline Sprint)</option>
-                                        <option value="$2,500 – $5,000">$2,500 – $5,000 (Full Stack / Cloud Overhaul)</option>
-                                        <option value="Monthly Retainer ($750 – $3,200/mo)">Monthly Retainer ($750 – $3,200/mo)</option>
+                                    <select id="inquiry_budget_range" name="budget_range" class="c28-select w-full px-4 py-2.5 rounded-xl bg-obsidian-950 border border-emerald-500/25 text-sm text-white focus:outline-none focus:border-neon-400">
+                                        <option value="$1,200 – $2,500" data-subtitle="Launch / Pipeline Sprint">$1,200 – $2,500</option>
+                                        <option value="$2,500 – $5,000" data-subtitle="Full Stack / Cloud Overhaul">$2,500 – $5,000</option>
+                                        <option value="Monthly Retainer ($750 – $3,200/mo)" data-subtitle="Dedicated Monthly Retainer">$750 – $3,200 / mo</option>
                                     </select>
                                 </div>
                                 <div>
                                     <label for="inquiry_timeline" class="block text-xs font-mono uppercase text-slate-300 mb-1.5">Target Timeline</label>
-                                    <select id="inquiry_timeline" name="timeline" class="w-full px-4 py-2.5 rounded-xl bg-obsidian-950 border border-emerald-500/25 text-sm text-white focus:outline-none focus:border-neon-400">
-                                        <option value="Immediate (Within 1–2 Weeks)">Immediate (1–2 Weeks)</option>
-                                        <option value="This Month">This Month</option>
-                                        <option value="Planning / Next Quarter">Planning / Next Quarter</option>
+                                    <select id="inquiry_timeline" name="timeline" class="c28-select w-full px-4 py-2.5 rounded-xl bg-obsidian-950 border border-emerald-500/25 text-sm text-white focus:outline-none focus:border-neon-400">
+                                        <option value="Immediate (Within 1–2 Weeks)" data-subtitle="Ready to kick off right away">Immediate (1–2 Weeks)</option>
+                                        <option value="This Month" data-subtitle="Starting within 2–4 weeks">This Month</option>
+                                        <option value="Planning / Next Quarter" data-subtitle="Scoping ahead for upcoming roadmap">Planning / Next Quarter</option>
                                     </select>
                                 </div>
                             </div>

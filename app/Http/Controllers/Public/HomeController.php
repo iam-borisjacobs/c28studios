@@ -194,7 +194,9 @@ class HomeController extends Controller
                     'solution' => 'Automated GitHub Actions CI/CD pipeline with health-checked rollouts.',
                 ],
             ],
-            'contact.email' => 'engineering@c28studios.com',
+            'contact.email' => 'contact@c28studios.dev',
+            'contact.phone' => '803 3880 229',
+            'contact.website' => 'www.c28studios.dev',
             'social.github_url' => 'https://github.com/iam-borisjacobs/c28studios',
             'cta.primary_label' => 'Book a Consultation',
         ];

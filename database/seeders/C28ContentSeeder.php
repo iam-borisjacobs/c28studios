@@ -841,10 +841,26 @@ class C28ContentSeeder extends Seeder
 
         SiteSetting::setValue(
             'contact.email',
-            'engineering@c28studios.com',
+            'contact@c28studios.dev',
             'contact',
             SiteSetting::TYPE_TEXT,
             'Primary studio inquiry email address'
+        );
+
+        SiteSetting::setValue(
+            'contact.phone',
+            '803 3880 229',
+            'contact',
+            SiteSetting::TYPE_TEXT,
+            'Primary studio contact phone number'
+        );
+
+        SiteSetting::setValue(
+            'contact.website',
+            'www.c28studios.dev',
+            'contact',
+            SiteSetting::TYPE_TEXT,
+            'Official studio website domain'
         );
 
         SiteSetting::setValue(

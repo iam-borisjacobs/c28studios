@@ -4,9 +4,9 @@
     $logoTop = trim((string) ($settings['brand.logo_top'] ?? ''));
     $logoBottom = trim((string) ($settings['brand.logo_bottom'] ?? ''));
     $logoText = trim((string) ($settings['brand.logo_text'] ?? 'C28')) ?: 'C28';
-    $defaultTheme = in_array(($settings['theme.mode'] ?? 'dark'), ['dark', 'light'], true)
+    $defaultTheme = in_array(($settings['theme.mode'] ?? 'system'), ['dark', 'light', 'system'], true)
         ? $settings['theme.mode']
-        : 'dark';
+        : 'system';
     $resolveLogoUrl = static function (string $path): string {
         if ($path === '') {
             return '';
@@ -19,7 +19,12 @@
     $logoTopUrl = $resolveLogoUrl($logoTop);
     $logoBottomUrl = $resolveLogoUrl($logoBottom);
     $primaryCtaLabel = $settings['cta.primary_label'] ?? 'Book a Consultation';
-    $contactEmail = $settings['contact.email'] ?? 'engineering@c28studios.com';
+    $contactEmail = $settings['contact.email'] ?? 'contact@c28studios.dev';
+    $contactPhone = $settings['contact.phone'] ?? '803 3880 229';
+    $contactWebsite = $settings['contact.website'] ?? 'www.c28studios.dev';
+    $contactWebsiteHref = (str_starts_with($contactWebsite, 'http://') || str_starts_with($contactWebsite, 'https://'))
+        ? $contactWebsite
+        : 'https://' . ltrim($contactWebsite, '/');
     $githubUrl = $settings['social.github_url'] ?? 'https://github.com/iam-borisjacobs/c28studios';
 @endphp
 <!DOCTYPE html>
@@ -34,8 +39,17 @@
     <script>
         (function () {
             try {
-                var saved = localStorage.getItem('c28_theme');
-                var mode = (saved === 'light' || saved === 'dark') ? saved : @js($defaultTheme);
+                var saved = sessionStorage.getItem('c28_theme_override');
+                var defaultTheme = @js($defaultTheme);
+                var systemLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+                var mode;
+                if (saved === 'light' || saved === 'dark') {
+                    mode = saved;
+                } else if (defaultTheme === 'light') {
+                    mode = 'light';
+                } else {
+                    mode = systemLight ? 'light' : 'dark';
+                }
                 var root = document.documentElement;
                 if (mode === 'light') {
                     root.classList.add('theme-light');
@@ -153,8 +167,10 @@
                     <p class="text-xs sm:text-sm text-slate-400 max-w-sm leading-relaxed mb-4">
                         {{ $brandStatement }}
                     </p>
-                    <div class="text-xs font-mono text-neon-400">
-                        &#9679; {{ $contactEmail }}
+                    <div class="space-y-1.5 text-xs font-mono text-neon-400">
+                        <div>&#9679; <a href="mailto:{{ $contactEmail }}" class="hover:underline">{{ $contactEmail }}</a></div>
+                        <div>&#9679; <a href="tel:{{ preg_replace('/\s+/', '', $contactPhone) }}" class="hover:underline">{{ $contactPhone }}</a></div>
+                        <div>&#9679; <a href="{{ $contactWebsiteHref }}" target="_blank" rel="noopener" class="hover:underline">{{ $contactWebsite }}</a></div>
                     </div>
                 </div>
 
@@ -183,7 +199,8 @@
                     <ul class="space-y-2.5 text-xs text-slate-400">
                         <li><button type="button" onclick="window.c28OpenModal && window.c28OpenModal('Footer Consultation')" class="hover:text-neon-400 transition">Book a Consultation</button></li>
                         <li><a href="{{ route('home') }}#engagement" class="hover:text-neon-400 transition">Sprint &amp; Retainer Tiers</a></li>
-                        <li><a href="{{ url('/admin') }}" class="font-mono text-neon-400 hover:text-neon-accent transition">Admin Control Plane &rarr;</a></li>
+                        <li><a href="{{ route('home') }}#faq" class="hover:text-neon-400 transition">Founder &amp; Technical FAQ</a></li>
+                        <li><a href="{{ route('home') }}#consultation" class="hover:text-neon-400 transition">Scope Your Project</a></li>
                     </ul>
                 </div>
             </div>
@@ -216,18 +233,34 @@
     </button>
 
     <!-- Interactive Consultation / Architecture Scoping Modal -->
-    <div id="consultationModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-obsidian-950/85 backdrop-blur-md" role="dialog" aria-modal="true" aria-labelledby="consultationModalTitle">
-        <div class="glass-card rounded-3xl max-w-lg w-full p-6 sm:p-8 border border-neon-400/40 shadow-2xl relative">
-            <button type="button" onclick="window.c28CloseModal && window.c28CloseModal()" aria-label="Close modal" class="absolute top-5 right-5 text-slate-400 hover:text-white text-xl font-mono">&times;</button>
-            <span id="modalBadge" class="inline-block px-3 py-1 rounded-full text-[11px] font-mono uppercase tracking-widest text-neon-400 section-badge mb-3">
-                C28 ENGINEERING INQUIRY
-            </span>
-            <h3 id="consultationModalTitle" class="text-2xl font-extrabold text-white mb-2">Scope Your Project With C28</h3>
-            <p class="text-xs sm:text-sm text-slate-300 mb-6">
+    <div
+        id="consultationModal"
+        onclick="if (event.target === this && window.c28CloseModal) window.c28CloseModal()"
+        class="fixed inset-0 z-50 hidden overflow-y-auto items-start sm:items-center justify-center p-3 sm:p-6 bg-black/75 backdrop-blur-md"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="consultationModalTitle"
+    >
+        <div class="glass-card my-auto max-h-[calc(100dvh-1.5rem)] sm:max-h-[90dvh] overflow-y-auto rounded-2xl sm:rounded-3xl max-w-lg w-full p-5 sm:p-8 border border-neon-400/40 shadow-2xl relative">
+            <div class="flex items-start justify-between gap-3 mb-2">
+                <span id="modalBadge" class="inline-block px-3 py-1 rounded-full text-[10px] sm:text-[11px] font-mono uppercase tracking-widest text-neon-400 section-badge">
+                    C28 ENGINEERING INQUIRY
+                </span>
+                <button
+                    type="button"
+                    onclick="window.c28CloseModal && window.c28CloseModal()"
+                    aria-label="Close modal"
+                    class="w-8 h-8 rounded-lg border border-white/15 bg-obsidian-900 text-slate-300 hover:text-white flex items-center justify-center text-lg font-mono shrink-0"
+                >
+                    &times;
+                </button>
+            </div>
+            <h3 id="consultationModalTitle" class="text-xl sm:text-2xl font-extrabold text-white mb-1.5">Scope Your Project With C28</h3>
+            <p class="text-xs sm:text-sm text-slate-300 mb-4 sm:mb-6 leading-relaxed">
                 Tell us which service you need and where your project stands today. You'll work directly with our engineering studio.
             </p>
 
-            <form id="modalForm" method="POST" action="{{ route('inquiries.store') }}" onsubmit="window.c28SubmitModal && window.c28SubmitModal(event)" class="space-y-4">
+            <form id="modalForm" method="POST" action="{{ route('inquiries.store', [], false) }}" onsubmit="window.c28SubmitModal && window.c28SubmitModal(event)" class="space-y-3 sm:space-y-4">
                 @csrf
 
                 <!-- Honeypot anti-spam trap -->
@@ -240,42 +273,42 @@
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
-                        <label class="block text-xs font-mono uppercase text-slate-300 mb-1.5" for="modalNameInput">Your Name &amp; Role *</label>
-                        <input id="modalNameInput" name="name" type="text" required placeholder="e.g. Alex Rivera — SaaS Founder" class="w-full px-4 py-2.5 rounded-xl bg-obsidian-950 border border-emerald-500/25 text-sm text-white focus:outline-none focus:border-neon-400">
+                        <label class="block text-[11px] sm:text-xs font-mono uppercase text-slate-300 mb-1" for="modalNameInput">Your Name &amp; Role *</label>
+                        <input id="modalNameInput" name="name" type="text" required placeholder="e.g. Alex Rivera — SaaS Founder" class="w-full px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-xl bg-obsidian-950 border border-emerald-500/25 text-xs sm:text-sm text-white focus:outline-none focus:border-neon-400">
                     </div>
                     <div>
-                        <label class="block text-xs font-mono uppercase text-slate-300 mb-1.5" for="modalEmailInput">Work Email *</label>
-                        <input id="modalEmailInput" name="email" type="email" required placeholder="founder@company.com" class="w-full px-4 py-2.5 rounded-xl bg-obsidian-950 border border-emerald-500/25 text-sm text-white focus:outline-none focus:border-neon-400">
+                        <label class="block text-[11px] sm:text-xs font-mono uppercase text-slate-300 mb-1" for="modalEmailInput">Work Email *</label>
+                        <input id="modalEmailInput" name="email" type="email" required placeholder="founder@company.com" class="w-full px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-xl bg-obsidian-950 border border-emerald-500/25 text-xs sm:text-sm text-white focus:outline-none focus:border-neon-400">
                     </div>
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
-                        <label class="block text-xs font-mono uppercase text-slate-300 mb-1.5" for="modalCompanyInput">Company / Project</label>
-                        <input id="modalCompanyInput" name="company" type="text" placeholder="Optional" class="w-full px-4 py-2.5 rounded-xl bg-obsidian-950 border border-emerald-500/25 text-sm text-white focus:outline-none focus:border-neon-400">
+                        <label class="block text-[11px] sm:text-xs font-mono uppercase text-slate-300 mb-1" for="modalCompanyInput">Company / Project</label>
+                        <input id="modalCompanyInput" name="company" type="text" placeholder="Optional" class="w-full px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-xl bg-obsidian-950 border border-emerald-500/25 text-xs sm:text-sm text-white focus:outline-none focus:border-neon-400">
                     </div>
                     <div>
-                        <label class="block text-xs font-mono uppercase text-slate-300 mb-1.5" for="modalEngagementMode">Engagement Mode</label>
-                        <select id="modalEngagementMode" name="engagement_mode" class="w-full px-4 py-2.5 rounded-xl bg-obsidian-950 border border-emerald-500/25 text-sm text-white focus:outline-none focus:border-neon-400">
-                            <option value="sprint_fixed">Fixed-Scope Sprint</option>
-                            <option value="monthly_retainer">Monthly Retainer</option>
-                            <option value="architecture_review">Architecture Review</option>
+                        <label class="block text-[11px] sm:text-xs font-mono uppercase text-slate-300 mb-1" for="modalEngagementMode">Engagement Mode</label>
+                        <select id="modalEngagementMode" name="engagement_mode" class="c28-select w-full px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-xl bg-obsidian-950 border border-emerald-500/25 text-xs sm:text-sm text-white focus:outline-none focus:border-neon-400">
+                            <option value="sprint_fixed" data-subtitle="Defined deliverables &amp; milestone timeline">Fixed-Scope Sprint</option>
+                            <option value="monthly_retainer" data-subtitle="Ongoing DevOps, security &amp; feature velocity">Monthly Retainer</option>
+                            <option value="architecture_review" data-subtitle="Repository, server &amp; pipeline audit">Architecture Review</option>
                         </select>
                     </div>
                 </div>
                 <div>
-                    <label class="block text-xs font-mono uppercase text-slate-300 mb-1.5" for="modalServiceSelect">Primary Engineering Need *</label>
-                    <select id="modalServiceSelect" name="service_interest" class="w-full px-4 py-2.5 rounded-xl bg-obsidian-950 border border-emerald-500/25 text-sm text-white focus:outline-none focus:border-neon-400">
-                        <option value="DevOps & Cloud Engineering">01 • DevOps &amp; Cloud Engineering (CI/CD, Docker, Server Setup)</option>
-                        <option value="DevSecOps Integration">02 • DevSecOps Integration (Vulnerability Scanning, Secret Management)</option>
-                        <option value="Software Development">03 • Software Development (SaaS, Web App, API, Dashboard)</option>
-                        <option value="Website Development">04 • Website Development (Landing Page, Business Site, Technical SEO)</option>
+                    <label class="block text-[11px] sm:text-xs font-mono uppercase text-slate-300 mb-1" for="modalServiceSelect">Primary Engineering Need *</label>
+                    <select id="modalServiceSelect" name="service_interest" class="c28-select w-full px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-xl bg-obsidian-950 border border-emerald-500/25 text-xs sm:text-sm text-white focus:outline-none focus:border-neon-400">
+                        <option value="DevOps & Cloud Engineering" data-subtitle="CI/CD, Docker, Linux &amp; Cloud Setup">01 • DevOps &amp; Cloud Engineering</option>
+                        <option value="DevSecOps Integration" data-subtitle="Trivy Scanning, Secrets &amp; Security Gates">02 • DevSecOps Integration</option>
+                        <option value="Software Development" data-subtitle="SaaS, Web Apps, APIs &amp; Dashboards">03 • Software Development</option>
+                        <option value="Website Development" data-subtitle="Landing Pages, Business Sites &amp; Technical SEO">04 • Website Development</option>
                     </select>
                 </div>
                 <div>
-                    <label class="block text-xs font-mono uppercase text-slate-300 mb-1.5" for="modalNotes">Repository or Architecture Context *</label>
-                    <textarea id="modalNotes" name="message" rows="3" required placeholder="Briefly describe your application, current deployment process, or timeline..." class="w-full px-4 py-2.5 rounded-xl bg-obsidian-950 border border-emerald-500/25 text-sm text-white focus:outline-none focus:border-neon-400"></textarea>
+                    <label class="block text-[11px] sm:text-xs font-mono uppercase text-slate-300 mb-1" for="modalNotes">Repository or Architecture Context *</label>
+                    <textarea id="modalNotes" name="message" rows="3" required placeholder="Briefly describe your application, current deployment process, or timeline..." class="w-full px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-xl bg-obsidian-950 border border-emerald-500/25 text-xs sm:text-sm text-white focus:outline-none focus:border-neon-400"></textarea>
                 </div>
-                <button id="modalSubmitBtn" type="submit" class="btn-emerald w-full py-3.5 rounded-full text-obsidian-950 font-bold text-sm">
+                <button id="modalSubmitBtn" type="submit" class="btn-emerald w-full py-3 sm:py-3.5 rounded-full text-obsidian-950 font-bold text-xs sm:text-sm">
                     Send Engineering Request
                 </button>
             </form>
